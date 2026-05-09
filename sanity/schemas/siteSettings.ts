@@ -6,7 +6,6 @@ export const siteSettingsSchema = defineType({
   title: 'Site Settings',
   type: 'document',
   icon: CogIcon,
-  __experimental_actions: ['update', 'publish'],
   fields: [
     defineField({ name: 'heroHeadline', title: 'Hero Headline', type: 'string', initialValue: 'Conversations That Matter' }),
     defineField({ name: 'heroBio', title: 'Hero Bio Line', type: 'string' }),
