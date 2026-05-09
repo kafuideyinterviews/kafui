@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { client, sanityFetch } from '@/sanity/lib/client'
+import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { urlFor, estimateReadingTime } from '@/sanity/lib/image'
 import {
   interviewBySlugQuery,

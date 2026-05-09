@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
-import { sanityFetch } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { urlFor } from '@/sanity/lib/image'
 import {
   siteSettingsQuery,

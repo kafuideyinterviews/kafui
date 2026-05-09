@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { interviewsListQuery } from '@/sanity/lib/queries'
 import type { InterviewCard } from '@/sanity/lib/queries'
 import InterviewCardComponent from '@/components/interview/InterviewCard'

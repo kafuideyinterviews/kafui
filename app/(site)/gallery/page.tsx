@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { urlFor } from '@/sanity/lib/image'
 import { galleryQuery, type GalleryImage } from '@/sanity/lib/queries'
 import GalleryGrid from '@/components/gallery/GalleryGrid'

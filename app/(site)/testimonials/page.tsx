@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { sanityFetch } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { urlFor } from '@/sanity/lib/image'
 import { testimonialsQuery, type Testimonial } from '@/sanity/lib/queries'
 import YouTubeEmbed from '@/components/interview/YouTubeEmbed'

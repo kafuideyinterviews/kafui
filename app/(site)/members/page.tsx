@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getSession } from '@/lib/session'
-import { sanityFetch } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/serverClient'
 import { interviewsListQuery, type InterviewCard } from '@/sanity/lib/queries'
 import InterviewCardComponent from '@/components/interview/InterviewCard'
 import type { PatreonTier } from '@/types'
