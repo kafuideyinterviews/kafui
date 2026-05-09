@@ -285,7 +285,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
       <button
         ref={scrollRef}
         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 opacity-0 flex flex-col items-center gap-2 cursor-pointer group"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 opacity-0 hidden sm:flex flex-col items-center gap-2 cursor-pointer group"
         aria-label="Scroll down"
       >
         <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-white/40 group-hover:text-white/60 transition-colors">Scroll</span>
