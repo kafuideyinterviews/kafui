@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { client } from '@/sanity/lib/client'
+import { createClient } from 'next-sanity'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +16,14 @@ const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataR
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const interviews: { slug: { current: string }; publishedAt: string }[] = await client.fetch(
+  const sanity = createClient({
+    projectId:  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+    dataset:    process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production',
+    apiVersion: '2024-01-01',
+    useCdn:     true,
+  })
+
+  const interviews: { slug: { current: string }; publishedAt: string }[] = await sanity.fetch(
     `*[_type == "interview"] | order(publishedAt desc) { slug, publishedAt }`,
   )
 
