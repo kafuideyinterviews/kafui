@@ -119,10 +119,10 @@ export default async function InterviewStoryPage({
           <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent" />
 
           {/* Hero content */}
-          <div className="absolute inset-0 flex flex-col justify-end">
+          <div className="absolute inset-0 flex flex-col justify-between pt-24 sm:pt-28">
 
-            {/* Back link — top-left, clears fixed navbar */}
-            <div className="absolute top-0 left-0 right-0 px-4 pt-24 sm:px-6 lg:px-8">
+            {/* Back link — top flex item, clears fixed navbar */}
+            <div className="px-4 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-4xl">
                 <nav>
                   <Link
@@ -135,6 +135,7 @@ export default async function InterviewStoryPage({
               </div>
             </div>
 
+            {/* Bottom content — bottom flex item, never overlaps back link */}
             <div className="mx-auto w-full max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
               {interview.category && (
                 <div className="mb-4 flex flex-wrap gap-2">
