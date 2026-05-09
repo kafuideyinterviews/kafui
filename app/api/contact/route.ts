@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const FROM_ADDRESS = 'Kafui Dey Website <no-reply@kafuideyinterviews.com>'
 const TO_ADDRESS   = process.env.CONTACT_TO_EMAIL ?? 'hello@kafuideyinterviews.com'
 const MAX_MESSAGE  = 2000
@@ -69,6 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { name, email, phone, subject, message, organisation } = body
 
   // ── Send via Resend ────────────────────────────────────────────────────────
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const orgLine   = organisation?.trim() ? `\nOrganisation: ${organisation.trim()}` : ''
   const phoneLine = phone.trim() ? `\nPhone:   ${phone.trim()}` : ''
 
