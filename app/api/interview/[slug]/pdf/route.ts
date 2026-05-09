@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { client } from '@/sanity/lib/client'
+import { createClient } from 'next-sanity'
 import { interviewBySlugQuery, type InterviewFull } from '@/sanity/lib/queries'
 
 export const runtime = 'nodejs'
@@ -19,6 +19,13 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<NextResponse> {
   const { slug } = await params
+
+  const client = createClient({
+    projectId:  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+    dataset:    process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production',
+    apiVersion: '2024-01-01',
+    useCdn:     false,
+  })
 
   // ── Fetch interview from Sanity ──────────────────────────────────────────
   const interview: InterviewFull | null = await client.fetch(
