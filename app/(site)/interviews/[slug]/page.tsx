@@ -75,7 +75,8 @@ export default async function InterviewStoryPage({
 }) {
   const { slug } = await params
 
-  const interview: InterviewFull | null = await client.fetch(interviewBySlugQuery, { slug })  const related: InterviewCard[] = interview?.category
+  const interview: InterviewFull | null = await client.fetch(interviewBySlugQuery, { slug })
+  const related: InterviewCard[] = interview?.category
     ? await sanityFetch<InterviewCard[]>({ query: relatedInterviewsQuery, params: { slug, category: interview.category }, tags: ['interviews'] })
     : []
 
