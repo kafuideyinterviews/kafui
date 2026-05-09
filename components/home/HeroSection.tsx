@@ -89,7 +89,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
   const headlineRef = useRef<HTMLHeadingElement>(null)
   const bioRef      = useRef<HTMLParagraphElement>(null)
   const ctaRef      = useRef<HTMLDivElement>(null)
-  const scrollRef   = useRef<HTMLDivElement>(null)
+  const scrollRef   = useRef<HTMLButtonElement>(null)
   const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── Auto-advance ────────────────────────────────────────────────────────
