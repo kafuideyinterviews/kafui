@@ -73,7 +73,8 @@ export const siteSettingsSchema = defineType({
           ],
           preview: {
             select: { title: 'caption', subtitle: 'type', media: 'image' },
-            prepare({ title, subtitle, media }: { title?: string; subtitle?: string; media: unknown }) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            prepare({ title, subtitle, media }: { title?: string; subtitle?: string; media?: any }) {
               return {
                 title:    title ?? (subtitle === 'video' ? 'Video slide' : 'Photo slide'),
                 subtitle: subtitle === 'video' ? '▶ Video' : '🖼 Photo',
