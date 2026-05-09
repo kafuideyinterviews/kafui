@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
+:root {
+  --color-background: #F7F2EB;
+  --color-foreground: #2C2C2A;
+  --color-surface:    #EDEAE4;
+  --color-border:     rgba(44, 44, 42, 0.12);
+  --color-muted:      #8A8880;
+  --color-navy:       #0B0F1A;
+  --color-gold:       #C9A84C;
+  --color-cream:      #F7F2EB;
+}
+
+.dark {
+  --color-background: #0B0F1A;
+  --color-foreground: #F0EBE3;
+  --color-surface:    #141922;
+  --color-border:     rgba(240, 235, 227, 0.1);
+  --color-muted:      #7A7870;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ─── Selection colour ───────────────────────────────────────────────────── */
+::selection {
+  background-color: #C9A84C33;
+  color: inherit;
+}
+
+/* ─── Story Body — editorial typography ─────────────────────────────────── */
+.story-body {
+  --story-body-size: 1.125rem;   /* 18px */
+  --story-line-height: 1.85;
+  font-size: var(--story-body-size);
+  line-height: var(--story-line-height);
+}
+
+/* Drop cap — first paragraph's first letter */
+.story-body > p:first-of-type::first-letter {
+  float: left;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 4.75rem;
+  font-weight: 600;
+  line-height: 0.78;
+  color: #C9A84C;
+  margin-right: 0.12em;
+  margin-top: 0.06em;
+}
+
+/* Clear the float after drop-cap paragraph */
+.story-body > p:first-of-type::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Chapter headings */
+.story-body h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 500;
+  margin-top: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-navy);
+}
+.dark .story-body h2 {
+  color: var(--color-cream);
+}
+
+/* Section headings */
+.story-body h3 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Normal paragraphs */
+.story-body p {
+  margin-bottom: 1.5rem;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: var(--story-body-size);
+  line-height: var(--story-line-height);
+  color: var(--color-foreground);
+  opacity: 0.9;
+}
+
+/* Inline elements */
+.story-body strong { font-weight: 600; opacity: 1; }
+.story-body em     { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1em; }
+
+/* ─── Focus ring ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+}
+
+/* ─── Hero gradient utility ──────────────────────────────────────────────── */
+.hero-scrim {
+  background: linear-gradient(
+    to top,
+    #0B0F1A 0%,
+    rgba(11, 15, 26, 0.7) 40%,
+    transparent 100%
+  );
+}
+
+/* ─── Responsive image insets ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .story-body .inset-left,
+  .story-body .inset-right {
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+}
