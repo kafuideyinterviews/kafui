@@ -2,7 +2,7 @@ import 'server-only'
 import { draftMode } from 'next/headers'
 import { createClient } from 'next-sanity'
 
-export const projectId  = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
+export const projectId  = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'notset'
 export const dataset    = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production'
 export const apiVersion = '2024-01-01'
 
