@@ -1,5 +1,4 @@
 import { defineField, defineType } from 'sanity'
-import type { SanityImageObjectStub } from '@sanity/asset-utils'
 import { ImageIcon } from '@sanity/icons'
 
 export const galleryImageSchema = defineType({
@@ -67,11 +66,12 @@ export const galleryImageSchema = defineType({
   ],
   preview: {
     select: { title: 'caption', subtitle: 'category', media: 'image' },
-    prepare({ title, subtitle, media }: { title?: string; subtitle?: string; media?: SanityImageObjectStub }) {
+    prepare({ title, subtitle, media }: { title?: string; subtitle?: string; media?: unknown }) {
       return {
         title:    title ?? 'Untitled image',
         subtitle: subtitle?.replace('_', ' '),
-        media,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        media:    media as any,
       }
     },
   },
