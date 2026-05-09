@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { galleryQuery, type GalleryImage } from '@/sanity/lib/queries'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
@@ -43,7 +43,12 @@ export default async function GalleryPage({
 }) {
   const { category } = await searchParams
 
-  const images: GalleryImage[] = await client.fetch(galleryQuery)
+  let images: GalleryImage[] = []
+  try {
+    images = await sanityFetch<GalleryImage[]>({ query: galleryQuery, tags: ['gallery'] })
+  } catch (error) {
+    console.error('Gallery page: Sanity fetch failed:', error)
+  }
 
   const categories = Array.from(new Set(images.map((img) => img.category))).sort()
 

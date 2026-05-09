@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import {
   siteSettingsQuery,
@@ -59,10 +59,17 @@ const bioComponents = {
 }
 
 export default async function AboutPage() {
-  const [settings, milestones]: [SiteSettings | null, Milestone[]] = await Promise.all([
-    client.fetch(siteSettingsQuery),
-    client.fetch(milestonesQuery),
-  ])
+  let settings: SiteSettings | null = null
+  let milestones: Milestone[] = []
+
+  try {
+    ;[settings, milestones] = await Promise.all([
+      sanityFetch<SiteSettings | null>({ query: siteSettingsQuery, tags: ['siteSettings'] }),
+      sanityFetch<Milestone[]>({ query: milestonesQuery, tags: ['milestones'] }),
+    ])
+  } catch (error) {
+    console.error('About page: Sanity fetch failed:', error)
+  }
 
   const portraitUrl = settings?.aboutPhoto?.asset?.url
     ? urlFor(settings.aboutPhoto).width(800).height(1000).quality(85).fit('crop').url()

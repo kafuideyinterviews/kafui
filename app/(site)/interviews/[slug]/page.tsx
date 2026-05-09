@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { client } from '@/sanity/lib/client'
+import { client, sanityFetch } from '@/sanity/lib/client'
 import { urlFor, estimateReadingTime } from '@/sanity/lib/image'
 import {
   interviewBySlugQuery,
@@ -75,18 +75,13 @@ export default async function InterviewStoryPage({
 }) {
   const { slug } = await params
 
-  const interview: InterviewFull | null = await client.fetch(interviewBySlugQuery, { slug })
-  const related: InterviewCard[] = await client.fetch(relatedInterviewsQuery, {
-    slug,
-    category: interview?.category ?? '',
-  })
+  const interview: InterviewFull | null = await client.fetch(interviewBySlugQuery, { slug })  const related: InterviewCard[] = interview?.category
+    ? await sanityFetch<InterviewCard[]>({ query: relatedInterviewsQuery, params: { slug, category: interview.category }, tags: ['interviews'] })
+    : []
 
   if (!interview) notFound()
 
-  // Refetch related with actual category once we have the interview
-  const relatedInterviews: InterviewCard[] = interview.category
-    ? await client.fetch(relatedInterviewsQuery, { slug, category: interview.category })
-    : related
+  const relatedInterviews = related
 
   const readingMinutes = estimateReadingTime(interview.storyBody)
   const heroUrl        = urlFor(interview.coverImage).width(1600).height(900).quality(85).url()

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { interviewsListQuery } from '@/sanity/lib/queries'
 import type { InterviewCard } from '@/sanity/lib/queries'
 import InterviewCardComponent from '@/components/interview/InterviewCard'
@@ -31,7 +31,12 @@ export default async function InterviewsPage({
   const { category } = await searchParams
   const activeCategory = category ?? 'All'
 
-  const interviews: InterviewCard[] = await client.fetch(interviewsListQuery)
+  let interviews: InterviewCard[] = []
+  try {
+    interviews = await sanityFetch<InterviewCard[]>({ query: interviewsListQuery, tags: ['interviews'] })
+  } catch (error) {
+    console.error('Interviews page: Sanity fetch failed:', error)
+  }
 
   const featured = interviews.find((i) => i.featured) ?? interviews[0]
 

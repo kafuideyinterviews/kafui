@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import {
   siteSettingsQuery,
@@ -25,12 +25,19 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function HomePage() {
-  const [settings, carouselInterviews, categoryRaw]: [SiteSettings, InterviewCard[], CategoryTile[]] =
-    await Promise.all([
-      client.fetch(siteSettingsQuery),
-      client.fetch(featuredCarouselQuery),
-      client.fetch(categoryTilesQuery),
+  let settings: SiteSettings | null = null
+  let carouselInterviews: InterviewCard[] = []
+  let categoryRaw: CategoryTile[] = []
+
+  try {
+    ;[settings, carouselInterviews, categoryRaw] = await Promise.all([
+      sanityFetch<SiteSettings>({ query: siteSettingsQuery, tags: ['siteSettings'] }),
+      sanityFetch<InterviewCard[]>({ query: featuredCarouselQuery, tags: ['interviews'] }),
+      sanityFetch<CategoryTile[]>({ query: categoryTilesQuery, tags: ['interviews'] }),
     ])
+  } catch (error) {
+    console.error('Home page: Sanity fetch failed:', error)
+  }
 
   // Deduplicate: one tile per category (first = most recent cover image)
   const seen = new Set<string>()

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { testimonialsQuery, type Testimonial } from '@/sanity/lib/queries'
 import YouTubeEmbed from '@/components/interview/YouTubeEmbed'
@@ -29,7 +29,12 @@ export const metadata: Metadata = {
 export const revalidate = 120
 
 export default async function TestimonialsPage() {
-  const testimonials: Testimonial[] = await client.fetch(testimonialsQuery)
+  let testimonials: Testimonial[] = []
+  try {
+    testimonials = await sanityFetch<Testimonial[]>({ query: testimonialsQuery, tags: ['testimonials'] })
+  } catch (error) {
+    console.error('Testimonials page: Sanity fetch failed:', error)
+  }
 
   const featured    = testimonials.filter((t) => t.featured)
   const withVideo   = testimonials.filter((t) => !t.featured && !!t.videoId)

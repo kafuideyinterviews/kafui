@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getSession } from '@/lib/session'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/client'
 import { interviewsListQuery, type InterviewCard } from '@/sanity/lib/queries'
 import InterviewCardComponent from '@/components/interview/InterviewCard'
 import type { PatreonTier } from '@/types'
@@ -73,7 +73,12 @@ export default async function MembersPage({
   const session = await getSession()
 
   // Fetch all interviews to show the locked ones
-  const allInterviews: InterviewCard[] = await client.fetch(interviewsListQuery)
+  let allInterviews: InterviewCard[] = []
+  try {
+    allInterviews = await sanityFetch<InterviewCard[]>({ query: interviewsListQuery, tags: ['interviews'] })
+  } catch (error) {
+    console.error('Members page: Sanity fetch failed:', error)
+  }
   const memberInterviews = allInterviews.filter((i) => i.isPatreonOnly)
 
   return (
