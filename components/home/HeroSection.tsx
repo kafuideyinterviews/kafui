@@ -140,8 +140,8 @@ export default function HeroSection({ settings }: HeroSectionProps) {
     <section
       className="relative flex min-h-screen items-end overflow-hidden"
       aria-label="Hero section"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onPointerEnter={(e) => { if (e.pointerType === 'mouse') setPaused(true) }}
+      onPointerLeave={(e) => { if (e.pointerType === 'mouse') setPaused(false) }}
     >
       {/* ── Slide backgrounds ──────────────────────────────────── */}
       {total > 0 ? (
