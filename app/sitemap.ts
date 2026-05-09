@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { client } from '@/sanity/lib/client'
 
+export const dynamic = 'force-dynamic'
+
 const BASE_URL = 'https://kafuideyinterviews.com'
 
 const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
