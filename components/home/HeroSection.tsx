@@ -6,7 +6,7 @@ import Link from 'next/link'
 import type { SiteSettings, HeroSlide } from '@/sanity/lib/queries'
 
 interface HeroSectionProps {
-  settings: SiteSettings
+  settings: SiteSettings | null
 }
 
 const SLIDE_DURATION = 6000 // ms per slide
@@ -22,18 +22,52 @@ function SlideMedia({
   preload: boolean
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Play/pause video depending on active state
+  // Detect viewport and pick the correct URL.
+  // Runs on mount AND on orientation change (phone rotation).
+  // ≤640px = phone → portrait 9:16 mobile video
+  // ≥641px = tablet / desktop → landscape 16:9 desktop video
+  useEffect(() => {
+    if (slide.type !== 'video') return
+
+    const detect = () => {
+      const mobile = window.innerWidth <= 640
+      setIsMobile(mobile)
+      const url = mobile
+        ? (slide.mobileVideoUrl ?? slide.desktopVideoUrl ?? null)
+        : (slide.desktopVideoUrl ?? slide.mobileVideoUrl ?? null)
+      setVideoUrl(url)
+    }
+
+    detect()
+    window.addEventListener('orientationchange', detect)
+    return () => window.removeEventListener('orientationchange', detect)
+  }, [slide])
+
+  // Force the browser to load the new source whenever the URL changes,
+  // then play/pause based on active state.
   useEffect(() => {
     const v = videoRef.current
-    if (!v) return
+    if (!v || !videoUrl) return
+    v.load()
+    if (active) {
+      v.play().catch(() => {})
+    }
+  }, [videoUrl]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle active/inactive transitions independently of URL changes.
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v || !videoUrl) return
     if (active) {
       v.currentTime = 0
       v.play().catch(() => {})
     } else {
       v.pause()
     }
-  }, [active])
+  }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const imgUrl = slide.type === 'image' && slide.image
     ? `${slide.image.asset.url}?w=1800&q=80&fit=crop&crop=focalpoint&fp-y=0.25`
@@ -49,18 +83,37 @@ function SlideMedia({
       ].join(' ')}
       aria-hidden={!active}
     >
-      {slide.type === 'video' && slide.videoUrl ? (
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload={preload ? 'auto' : 'none'}
-          poster={imgUrl ?? undefined}
-          className="h-full w-full object-cover object-[center_20%]"
-        >
-          <source src={slide.videoUrl} type="video/mp4" />
-        </video>
+      {slide.type === 'video' ? (
+        videoUrl ? (
+          <video
+            key={videoUrl}
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload={preload ? 'auto' : 'none'}
+            poster={imgUrl ?? undefined}
+            className={
+              isMobile
+                ? 'h-full w-full bg-black object-contain'
+                : 'h-full w-full object-cover object-[center_20%]'
+            }
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        ) : (
+          /* Poster-only placeholder while JS detects viewport */
+          imgUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={imgUrl}
+              alt={slide.videoPoster?.alt ?? 'Kafui Dey'}
+              className="h-full w-full object-cover object-[center_20%]"
+            />
+          ) : (
+            <div className="h-full w-full bg-navy" />
+          )
+        )
       ) : imgUrl ? (
         <Image
           src={imgUrl}
@@ -81,7 +134,7 @@ function SlideMedia({
 
 // ── Main Hero ─────────────────────────────────────────────────────────────────
 export default function HeroSection({ settings }: HeroSectionProps) {
-  const slides   = settings.heroSlides ?? []
+  const slides   = settings?.heroSlides ?? []
   const total    = slides.length
 
   const [current,  setCurrent]  = useState(0)
@@ -251,14 +304,14 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             ref={headlineRef}
             className="font-serif text-5xl font-normal italic leading-tight text-white opacity-0 sm:text-6xl md:text-7xl"
           >
-            {settings.heroHeadline ?? 'Conversations That Matter'}
+            {settings?.heroHeadline ?? 'Conversations That Matter'}
           </h1>
 
           <p
             ref={bioRef}
             className="mt-6 max-w-lg font-sans text-base leading-relaxed text-white/65 opacity-0 sm:text-lg"
           >
-            {settings.heroBio ??
+            {settings?.heroBio ??
               "In-depth dialogues with Ghana's most compelling voices — in politics, culture, business, and beyond."}
           </p>
 
@@ -270,7 +323,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               Browse Interviews
             </Link>
             <a
-              href={settings.patreonUrl ?? 'https://www.patreon.com/kafuidey'}
+              href={settings?.patreonUrl ?? 'https://www.patreon.com/kafuidey'}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-sm border border-white/30 px-8 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:border-gold hover:text-gold"

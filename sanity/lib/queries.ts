@@ -12,7 +12,8 @@ export const siteSettingsQuery = groq`
     heroSlides[] {
       _key,
       type,
-      videoUrl,
+      desktopVideoUrl,
+      mobileVideoUrl,
       caption,
       image       { ${sanityImageFragment} },
       videoPoster { ${sanityImageFragment} },
@@ -101,12 +102,13 @@ export type SanityImage = {
 }
 
 export type HeroSlide = {
-  _key:         string
-  type:         'video' | 'image'
-  videoUrl?:    string
-  caption?:     string
-  image?:       SanityImage
-  videoPoster?: SanityImage
+  _key:              string
+  type:              'video' | 'image'
+  desktopVideoUrl?:  string
+  mobileVideoUrl?:   string
+  caption?:          string
+  image?:            SanityImage
+  videoPoster?:      SanityImage
 }
 
 export type SiteSettings = {

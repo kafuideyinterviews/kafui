@@ -47,10 +47,17 @@ export const siteSettingsSchema = defineType({
               ],
             }),
             defineField({
-              name: 'videoUrl',
-              title: 'Video URL (.mp4)',
+              name: 'desktopVideoUrl',
+              title: 'Desktop Video URL (16:9 landscape)',
               type: 'url',
-              description: 'Direct .mp4 link from Cloudinary, Bunny CDN, or any CDN. Keep under 8MB.',
+              description: 'Landscape .mp4 for screens 769px and wider. Upload to Cloudinary and paste the direct URL here.',
+              hidden: ({ parent }) => parent?.type !== 'video',
+            }),
+            defineField({
+              name: 'mobileVideoUrl',
+              title: 'Mobile Video URL (9:16 portrait)',
+              type: 'url',
+              description: 'Portrait .mp4 for screens 768px and below. Use Cloudinary transformations (ar_9:16,c_fill,g_auto) and paste the URL here.',
               hidden: ({ parent }) => parent?.type !== 'video',
             }),
             defineField({
