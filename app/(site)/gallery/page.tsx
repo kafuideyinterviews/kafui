@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { sanityFetch } from '@/sanity/lib/serverClient'
 import { urlFor } from '@/sanity/lib/image'
-import { galleryQuery, type GalleryImage } from '@/sanity/lib/queries'
+import { galleryQuery, type GalleryCategory } from '@/sanity/lib/queries'
 import GalleryGrid from '@/components/gallery/GalleryGrid'
 
 export const metadata: Metadata = {
@@ -27,43 +27,33 @@ export const metadata: Metadata = {
 
 export const revalidate = 120
 
-const CATEGORY_LABELS: Record<string, string> = {
-  on_air:     'On Air',
-  events:     'Events',
-  interviews: 'Interviews',
-  awards:     'Awards',
-  bts:        'Behind the Scenes',
-  community:  'Community',
-}
-
 export default async function GalleryPage({
   searchParams,
 }: {
   searchParams: Promise<{ category?: string }>
 }) {
-  const { category } = await searchParams
+  const { category: categorySlug } = await searchParams
 
-  let images: GalleryImage[] = []
+  let categories: GalleryCategory[] = []
   try {
-    images = await sanityFetch<GalleryImage[]>({ query: galleryQuery, tags: ['gallery'] })
+    categories = await sanityFetch<GalleryCategory[]>({ query: galleryQuery, tags: ['gallery'] })
   } catch (error) {
     console.error('Gallery page: Sanity fetch failed:', error)
   }
 
-  const categories = Array.from(new Set(images.map((img) => img.category))).sort()
-
-  const filtered = category
-    ? images.filter((img) => img.category === category)
-    : images
+  // Select images: one category or all flattened
+  const sourceItems = categorySlug
+    ? (categories.find((c) => c.slug === categorySlug)?.images ?? [])
+    : categories.flatMap((c) => c.images ?? [])
 
   // Pre-build optimised URLs to pass to the client component
-  const imagesWithUrls = filtered.map((img) => ({
-    ...img,
-    thumbUrl:    urlFor(img.image).width(600).height(600).quality(75).fit('crop').url(),
-    fullUrl:     urlFor(img.image).width(1600).quality(85).url(),
-    lqip:        img.image?.asset?.metadata?.lqip ?? '',
-    width:       img.image?.asset?.metadata?.dimensions?.width ?? 800,
-    height:      img.image?.asset?.metadata?.dimensions?.height ?? 800,
+  const imagesWithUrls = sourceItems.map((item) => ({
+    ...item,
+    thumbUrl: urlFor(item.image).width(600).height(600).quality(75).fit('crop').url(),
+    fullUrl:  urlFor(item.image).width(1600).quality(85).url(),
+    lqip:     item.image?.asset?.metadata?.lqip ?? '',
+    width:    item.image?.asset?.metadata?.dimensions?.width ?? 800,
+    height:   item.image?.asset?.metadata?.dimensions?.height ?? 800,
   }))
 
   return (
@@ -92,21 +82,21 @@ export default async function GalleryPage({
               href="/gallery"
               className={[
                 'shrink-0 rounded-sm px-4 py-1.5 font-sans text-xs font-semibold uppercase tracking-widest transition-colors',
-                !category ? 'bg-gold text-navy' : 'text-muted hover:text-foreground',
+                !categorySlug ? 'bg-gold text-navy' : 'text-muted hover:text-foreground',
               ].join(' ')}
             >
               All
             </a>
             {categories.map((cat) => (
               <a
-                key={cat}
-                href={`/gallery?category=${cat}`}
+                key={cat._id}
+                href={`/gallery?category=${cat.slug}`}
                 className={[
                   'shrink-0 rounded-sm px-4 py-1.5 font-sans text-xs font-semibold uppercase tracking-widest transition-colors',
-                  category === cat ? 'bg-gold text-navy' : 'text-muted hover:text-foreground',
+                  categorySlug === cat.slug ? 'bg-gold text-navy' : 'text-muted hover:text-foreground',
                 ].join(' ')}
               >
-                {CATEGORY_LABELS[cat] ?? cat}
+                {cat.title}
               </a>
             ))}
           </div>
