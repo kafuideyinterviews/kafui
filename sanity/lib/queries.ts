@@ -79,8 +79,18 @@ export const categoryTilesQuery = groq`
   }
 `
 export const galleryQuery = groq`
-  *[_type == "galleryImage"] | order(order asc) {
-    _id, image { ${sanityImageFragment} }, caption, category, dateTaken, featured, order,
+  *[_type == "galleryCategory"] | order(order asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    order,
+    images[] {
+      _key,
+      image { ${sanityImageFragment} },
+      caption,
+      dateTaken,
+      featured,
+    },
   }
 `
 export const testimonialsQuery = groq`
@@ -145,9 +155,19 @@ export type InterviewFull = InterviewCard & {
   seoTitle?: string; seoDescription?: string; storyBody: StoryBodyBlock[]
 }
 export type CategoryTile = { category: string; coverImage: SanityImage }
-export type GalleryImage = {
-  _id: string; image: SanityImage; caption?: string
-  category: string; dateTaken?: string; featured: boolean; order: number
+export type GalleryItem = {
+  _key: string
+  image: SanityImage
+  caption?: string
+  dateTaken?: string
+  featured?: boolean
+}
+export type GalleryCategory = {
+  _id: string
+  title: string
+  slug: string
+  order?: number
+  images?: GalleryItem[]
 }
 export type Testimonial = {
   _id: string; person: string; role: string; photo?: SanityImage

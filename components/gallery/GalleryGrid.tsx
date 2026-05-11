@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import type { GalleryImage } from '@/sanity/lib/queries'
+import type { GalleryItem } from '@/sanity/lib/queries'
 
-type GalleryItem = GalleryImage & {
+type GalleryGridItem = GalleryItem & {
   thumbUrl: string
   fullUrl:  string
   lqip:     string
@@ -13,7 +13,7 @@ type GalleryItem = GalleryImage & {
 }
 
 interface GalleryGridProps {
-  images: GalleryItem[]
+  images: GalleryGridItem[]
 }
 
 export default function GalleryGrid({ images }: GalleryGridProps) {
@@ -62,7 +62,7 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
       >
         {images.map((img, i) => (
           <button
-            key={img._id}
+            key={img._key}
             onClick={() => openAt(i)}
             className="group mb-4 block w-full overflow-hidden rounded-sm focus-visible:ring-2 focus-visible:ring-gold focus-visible:outline-none"
             aria-label={`Open ${img.caption ?? img.image.alt} in lightbox`}

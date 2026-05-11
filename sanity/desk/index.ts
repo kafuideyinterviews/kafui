@@ -76,27 +76,9 @@ export const structure: StructureResolver = (S) =>
                 .title('Gallery')
                 .icon(ImageIcon)
                 .child(
-                  S.list()
-                    .title('Gallery')
-                    .items([
-                      S.listItem()
-                        .title('All Images')
-                        .icon(ImageIcon)
-                        .child(
-                          S.documentTypeList('galleryImage')
-                            .title('All Gallery Images')
-                            .defaultOrdering([{ field: 'order', direction: 'asc' }]),
-                        ),
-                      S.listItem()
-                        .title('Featured Images')
-                        .icon(StarIcon)
-                        .child(
-                          S.documentTypeList('galleryImage')
-                            .title('Featured Gallery Images')
-                            .filter('_type == "galleryImage" && featured == true')
-                            .defaultOrdering([{ field: 'order', direction: 'asc' }]),
-                        ),
-                    ]),
+                  S.documentTypeList('galleryCategory')
+                    .title('Gallery Categories')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }]),
                 ),
 
               // Testimonials
