@@ -37,6 +37,26 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
+  async headers() {
+    return [
+      {
+        // Tell the browser the SW is allowed to control the full origin scope,
+        // and never serve a cached copy of the SW file itself.
+        source: '/sw.js',
+        headers: [
+          { key: 'Cache-Control',        value: 'no-store, no-cache, must-revalidate' },
+          { key: 'Service-Worker-Allowed', value: '/' },
+        ],
+      },
+      {
+        // Manifest must not be cached aggressively
+        source: '/manifest.json',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

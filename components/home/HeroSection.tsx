@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { SiteSettings, HeroSlide } from '@/sanity/lib/queries'
 
 interface HeroSectionProps {
@@ -165,28 +167,23 @@ export default function HeroSection({ settings }: HeroSectionProps) {
 
   // ── GSAP entrance ───────────────────────────────────────────────────────
   useEffect(() => {
-    let ctx: { revert?: () => void } = {}
-    ;(async () => {
-      const { gsap }          = await import('gsap')
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-      gsap.registerPlugin(ScrollTrigger)
-      ctx = gsap.context(() => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        tl.fromTo(headlineRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1, delay: 0.4 })
-          .fromTo(bioRef.current,      { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8 }, '-=0.5')
-          .fromTo(ctaRef.current,      { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
-          .fromTo(scrollRef.current,   { opacity: 0 },        { opacity: 1, duration: 0.6 },        '-=0.2')
-        ScrollTrigger.create({
-          trigger: document.documentElement,
-          start: 'top top', end: 'bottom bottom',
-          onUpdate: (self) => {
-            if (headlineRef.current)
-              headlineRef.current.style.transform = `translateY(${self.progress * 60}px)`
-          },
-        })
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      tl.fromTo(headlineRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1, delay: 0.4 })
+        .fromTo(bioRef.current,      { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8 }, '-=0.5')
+        .fromTo(ctaRef.current,      { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+        .fromTo(scrollRef.current,   { opacity: 0 },        { opacity: 1, duration: 0.6 },        '-=0.2')
+      ScrollTrigger.create({
+        trigger: document.documentElement,
+        start: 'top top', end: 'bottom bottom',
+        onUpdate: (self) => {
+          if (headlineRef.current)
+            headlineRef.current.style.transform = `translateY(${self.progress * 60}px)`
+        },
       })
-    })()
-    return () => { ctx.revert?.() }
+    })
+    return () => { ctx.revert() }
   }, [])
 
   return (
