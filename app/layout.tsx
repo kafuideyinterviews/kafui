@@ -1,5 +1,7 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
+import ServiceWorkerRegistration from '@/components/ui/ServiceWorkerRegistration'
+import PWAInstallBanner from '@/components/ui/PWAInstallBanner'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -71,6 +73,11 @@ export const metadata: Metadata = {
     canonical: 'https://kafuideyinterviews.com',
   },
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Kafui Dey',
+  },
   icons: {
     icon: [
       { url: '/icon0.svg', type: 'image/svg+xml' },
@@ -82,10 +89,25 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#d28d2d' },
+    { media: '(prefers-color-scheme: dark)',  color: '#0a1628' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: 'cover',
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <ServiceWorkerRegistration />
+        <PWAInstallBanner />
+      </body>
     </html>
   )
 }
