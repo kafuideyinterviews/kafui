@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
+import Script from 'next/script'
 import ServiceWorkerRegistration from '@/components/ui/ServiceWorkerRegistration'
 import PWAInstallBanner from '@/components/ui/PWAInstallBanner'
 import './globals.css'
@@ -103,6 +104,20 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <head>
+        {/*
+          Capture beforeinstallprompt the moment Chrome fires it —
+          before React bundles have loaded. next/script strategy=beforeInteractive
+          injects this into the <head> of the initial HTML document.
+        */}
+        <Script
+          id="pwa-capture"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `window.__pwaInstallPrompt=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaInstallPrompt=e;});`,
+          }}
+        />
+      </head>
       <body className="antialiased">
         {children}
         <ServiceWorkerRegistration />
