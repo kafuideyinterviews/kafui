@@ -8,7 +8,10 @@ const VIDEOS = [
   { id: 'yyQmEyPJ-WM', title: 'Kafui Dey Interview' },
   { id: 'jzMzTkGRzoI', title: 'Kafui Dey Interview' },
   { id: 'JEmhKwewtlw', title: 'Kafui Dey Interview' },
-  // Add more video IDs here as needed
+  { id: '995Let39nwg', title: 'Kafui Dey Interview' },
+  { id: '6yB9u8IYEB0', title: 'Kafui Dey Interview' },
+  { id: 'Ou-KmIqfvLA', title: 'Kafui Dey Interview' },
+  
 ]
 
 function VideoCard({ id, title, visible, delay, priority }: { id: string; title: string; visible: boolean; delay: number; priority?: boolean }) {
@@ -140,7 +143,7 @@ export default function YouTubeSection() {
             </p>
           </div>
           <a
-            href="https://www.youtube.com/@KafuiDey"
+            href="https://www.youtube.com/@kafuideymc"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center gap-2.5 rounded-sm bg-[#FF0000] px-6 py-3 font-sans text-sm font-semibold uppercase tracking-widest text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#cc0000] hover:shadow-[0_8px_24px_rgba(255,0,0,0.3)]"
