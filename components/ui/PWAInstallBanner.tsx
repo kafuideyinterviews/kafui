@@ -7,22 +7,42 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
+declare global {
+  interface Window {
+    __pwaInstallPrompt?: BeforeInstallPromptEvent
+  }
+}
+
 export default function PWAInstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [visible, setVisible] = useState(false)
   const [installing, setInstalling] = useState(false)
 
   useEffect(() => {
-    // Already installed — don't show
+    // Already installed
     if (window.matchMedia('(display-mode: standalone)').matches) return
     if ((navigator as Navigator & { standalone?: boolean }).standalone) return
+    // User dismissed this session
+    if (sessionStorage.getItem('pwa-dismissed')) return
 
-    const handler = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e as BeforeInstallPromptEvent)
+    const attach = (e: BeforeInstallPromptEvent) => {
+      window.__pwaInstallPrompt = e
+      setDeferredPrompt(e)
       setVisible(true)
     }
 
+    // If the event was captured before React mounted (common on fast connections),
+    // read it from the global the inline <head> script stored it in.
+    if (window.__pwaInstallPrompt) {
+      attach(window.__pwaInstallPrompt)
+      return
+    }
+
+    // Otherwise listen for it normally (slower connections / re-visits)
+    const handler = (e: Event) => {
+      e.preventDefault()
+      attach(e as BeforeInstallPromptEvent)
+    }
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
