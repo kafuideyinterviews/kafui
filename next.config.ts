@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import path from 'path'
+import withPWA from '@ducanh2912/next-pwa'
 
 const nextConfig: NextConfig = {
   // @react-pdf/renderer and its sub-packages use Node.js-only APIs; prevent bundling
@@ -40,15 +41,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Tell the browser the SW is allowed to control the full origin scope,
-        // and never serve a cached copy of the SW file itself.
-        source: '/sw.js',
-        headers: [
-          { key: 'Cache-Control',        value: 'no-store, no-cache, must-revalidate' },
-          { key: 'Service-Worker-Allowed', value: '/' },
-        ],
-      },
-      {
         // Manifest must not be cached aggressively
         source: '/manifest.json',
         headers: [
@@ -59,4 +51,16 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withPWA({
+  dest: 'public',
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  disable: process.env.NODE_ENV === 'development',
+  fallbacks: {
+    document: '/offline',
+  },
+  workboxOptions: {
+    disableDevLogs: true,
+  },
+})(nextConfig)
