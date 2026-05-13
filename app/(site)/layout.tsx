@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import ChatWidget from '@/components/ui/ChatWidget'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://kafuideyinterviews.com'),
@@ -32,7 +31,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
       {children}
       <Footer />
-      <ChatWidget />
     </>
   )
 }
