@@ -72,19 +72,34 @@ export default function ChatWidget() {
   }, [open])
 
   return (
-    <div className="fixed bottom-6 right-6 md:bottom-20 z-50 flex flex-col items-end gap-3">
-      {/* Panel */}
-      <div
-        ref={panelRef}
-        role="dialog"
-        aria-label="Book an interview — contact options"
-        aria-hidden={!open}
-        className={`w-72 overflow-hidden rounded-md border border-gold/20 bg-navy shadow-[0_20px_60px_rgba(0,0,0,0.55)] transition-all duration-300 ${
-          open
-            ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+    <div className="flex flex-row items-center gap-3">
+
+      {/* Scroll to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Scroll to top"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-gold/50 bg-navy text-gold shadow-[0_4px_16px_rgba(0,0,0,0.35)] transition-all duration-200 hover:bg-gold hover:text-navy active:scale-95"
       >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 10.5L8 5.5L13 10.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {/* Chat FAB + panel (panel floats above the FAB) */}
+      <div className="relative flex flex-col items-center">
+
+        {/* Panel */}
+        <div
+          ref={panelRef}
+          role="dialog"
+          aria-label="Book an interview — contact options"
+          aria-hidden={!open}
+          className={`absolute bottom-full mb-4 w-72 overflow-hidden rounded-md border border-gold/20 bg-navy shadow-[0_-8px_40px_rgba(0,0,0,0.55)] transition-all duration-300 ${
+            open
+              ? 'opacity-100 translate-y-0 pointer-events-auto'
+              : 'opacity-0 translate-y-4 pointer-events-none'
+          }`}
+        >
         {/* Header */}
         <div className="flex items-center gap-3 border-b border-white/10 bg-[#111827] px-4 py-3.5">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gold/20">
@@ -168,6 +183,7 @@ export default function ChatWidget() {
           <span className="absolute inset-0 rounded-full animate-ping bg-gold/30" aria-hidden="true" />
         )}
       </button>
+      </div>{/* end relative wrapper */}
     </div>
   )
 }

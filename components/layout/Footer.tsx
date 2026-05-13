@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import FooterNav from './FooterNav'
-import ScrollToTop from '@/components/ui/ScrollToTop'
+import ChatWidget from '@/components/ui/ChatWidget'
 
 const SOCIAL_LINKS = [
   { label: 'YouTube',   href: 'https://www.youtube.com/@kafuideymc',                          icon: 'M21.6 7.2a2.7 2.7 0 00-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 00-1.9 1.9C2 8.9 2 12 2 12s0 3.1.4 4.8a2.7 2.7 0 001.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 001.9-1.9C22 15.1 22 12 22 12s0-3.1-.4-4.8zm-11.1 7.7V9.1l5.1 2.9-5.1 2.9z' },
@@ -86,7 +86,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 border-t border-white/10 pt-8">
           <div className="mb-6 flex justify-center">
-            <ScrollToTop />
+            <ChatWidget />
           </div>
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
           <p className="text-center font-sans text-sm text-white/30 sm:text-left">
