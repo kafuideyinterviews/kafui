@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
-import ServiceWorkerRegistration from '@/components/ui/ServiceWorkerRegistration'
+import Script from 'next/script'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -104,7 +104,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className="antialiased">
         {children}
-        <ServiceWorkerRegistration />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-X0H0VPPHKC"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-X0H0VPPHKC');
+          `}
+        </Script>
       </body>
     </html>
   )
