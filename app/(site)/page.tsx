@@ -15,6 +15,7 @@ import HeroSection from '@/components/home/HeroSection'
 import FeaturedCarousel from '@/components/home/FeaturedCarousel'
 import SpotifySection from '@/components/home/SpotifySection'
 import YouTubeSection from '@/components/home/YouTubeSection'
+import PatreonWidget from '@/components/home/PatreonWidget'
 
 export const metadata: Metadata = {
   title: 'Kafui Dey — Conversations That Matter',
@@ -127,40 +128,11 @@ export default async function HomePage() {
       {/* ── Spotify ──────────────────────────────────────────────── */}
       <SpotifySection />
 
+      {/* ── Patreon Widget ──────────────────────────────────────── */}
+      <PatreonWidget />
+
       {/* ── YouTube ──────────────────────────────────────────────── */}
       <YouTubeSection />
-
-      {/* ── Patreon CTA ─────────────────────────────────────────── */}
-      <section className="border-b border-border py-24">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <p className="font-sans text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-            Members Only
-          </p>
-          <h2 className="mt-4 font-serif text-4xl italic font-normal text-navy dark:text-cream md:text-5xl">
-            Go deeper with Patreon
-          </h2>
-          <p className="mt-5 font-sans text-base leading-relaxed text-foreground/60">
-            Unlock exclusive long-form interviews, full unedited transcripts, early access to
-            upcoming conversations, and behind-the-scenes content — available only to Patreon members.
-          </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <a
-              href="https://www.patreon.com/kafuidey"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-sm bg-gold px-8 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-navy transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#a8893e] hover:text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
-            >
-              Become a Member
-            </a>
-            <Link
-              href="/members"
-              className="font-sans text-sm font-semibold uppercase tracking-widest text-muted hover:text-foreground transition-colors"
-            >
-              Learn More →
-            </Link>
-          </div>
-        </div>
-      </section>
     </main>
   )
 }

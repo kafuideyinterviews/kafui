@@ -115,7 +115,7 @@ export default async function MembersPage({
           >
             Your Patreon account was found but you don&apos;t have an active membership.{' '}
             <a
-              href="https://www.patreon.com/kafuidey"
+              href="https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold underline"
@@ -172,7 +172,7 @@ export default async function MembersPage({
               Connect your Patreon account to unlock your member content.
             </p>
             <a
-              href="https://www.patreon.com/kafuidey"
+              href="https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 inline-block rounded-sm bg-gold px-8 py-3 font-sans text-sm font-semibold uppercase tracking-widest text-navy transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#a8893e] hover:text-white hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
@@ -255,7 +255,7 @@ export default async function MembersPage({
 
                   {/* CTA */}
                   <a
-                    href="https://www.patreon.com/kafuidey"
+                    href="https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={[
