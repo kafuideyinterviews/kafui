@@ -320,7 +320,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               Browse Interviews
             </Link>
             <a
-              href={settings?.patreonUrl ?? 'https://www.patreon.com/kafuidey'}
+              href={settings?.patreonUrl ?? 'https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink'}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-sm border border-white/30 px-8 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:border-gold hover:text-gold"

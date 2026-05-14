@@ -181,7 +181,7 @@ export default function Navbar() {
             )
           })}
           <a
-            href="https://www.patreon.com/kafuidey"
+            href="https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 inline-block rounded-sm bg-gold px-6 py-3.5 text-center font-sans text-sm font-semibold uppercase tracking-widest text-navy transition-all duration-200 hover:bg-[#a8893e] hover:text-white"
