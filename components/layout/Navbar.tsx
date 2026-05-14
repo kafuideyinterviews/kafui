@@ -165,14 +165,14 @@ export default function Navbar() {
         </div>
 
         {/* Nav links */}
-        <nav className="flex flex-1 flex-col justify-center gap-0 overflow-y-auto px-8">
+        <nav className="flex flex-1 flex-col overflow-y-auto px-8 py-6">
           {NAV_LINKS.map(({ label, href }) => {
             const active = pathname.startsWith(href)
             return (
               <Link
                 key={href}
                 href={href}
-                className={`border-b border-white/10 py-5 font-serif text-3xl italic transition-colors ${
+                className={`border-b border-white/10 py-4 font-serif text-2xl italic transition-colors ${
                   active ? 'text-gold' : 'text-white hover:text-gold'
                 }`}
               >
@@ -184,7 +184,7 @@ export default function Navbar() {
             href="https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8 inline-block rounded-sm bg-gold px-6 py-3.5 text-center font-sans text-sm font-semibold uppercase tracking-widest text-navy transition-all duration-200 hover:bg-[#a8893e] hover:text-white"
+            className="mt-6 inline-block rounded-sm bg-gold px-6 py-3.5 text-center font-sans text-sm font-semibold uppercase tracking-widest text-navy transition-all duration-200 hover:bg-[#a8893e] hover:text-white"
           >
             Join Patreon
           </a>
