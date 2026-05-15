@@ -56,25 +56,6 @@ export default async function HomePage() {
       {/* ── Featured Interviews Carousel ─────────────────────── */}
       <FeaturedCarousel interviews={carouselInterviews} />
 
-      {/* ── Stats strip ─────────────────────────────────────────── */}
-      <section className="bg-navy">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {[
-              { value: '30+', label: 'Years in Media' },
-              { value: '50+', label: 'Interviews Conducted' },
-              { value: '3', label: 'Decades of Journalism' },
-              { value: 'Ghana', label: 'Based in Accra' },
-            ].map(({ value, label }) => (
-              <div key={label} className="text-center">
-                <p className="font-serif text-4xl italic font-normal text-gold">{value}</p>
-                <p className="mt-2 font-sans text-xs uppercase tracking-widest text-white/40">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Browse by Category ──────────────────────────────────── */}
       {categoryTiles.length > 0 && (
         <section className="border-b border-border">
