@@ -97,7 +97,7 @@ function SlideMedia({
             poster={imgUrl ?? undefined}
             className={
               isMobile
-                ? 'h-full w-full bg-black object-contain'
+                ? 'h-full w-full bg-black object-cover'
                 : 'h-full w-full object-cover object-[center_20%]'
             }
           >
@@ -110,7 +110,11 @@ function SlideMedia({
             <img
               src={imgUrl}
               alt={slide.videoPoster?.alt ?? 'Kafui Dey'}
-              className="h-full w-full object-cover object-[center_20%]"
+              className={
+                isMobile
+                  ? 'h-full w-full object-cover'
+                  : 'h-full w-full object-cover object-[center_20%]'
+              }
             />
           ) : (
             <div className="h-full w-full bg-navy" />
