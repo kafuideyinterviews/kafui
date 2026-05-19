@@ -52,10 +52,10 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
               key={i}
               className="my-8 border-l-4 border-gold bg-border/5 py-4 pl-6 font-serif text-lg italic text-navy dark:text-cream"
             >
-              <p>{b.quote}</p>
+              <p>{b.quote as string}</p>
               {b.attribution && (
                 <footer className="mt-2 font-sans text-sm font-semibold text-muted">
-                  — {b.attribution}
+                  — {b.attribution as string}
                 </footer>
               )}
             </blockquote>
@@ -93,7 +93,7 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
               </div>
               {b.caption && (
                 <figcaption className="mt-2 font-sans text-sm text-muted italic">
-                  {b.caption}
+                  {b.caption as string}
                 </figcaption>
               )}
             </figure>
@@ -109,7 +109,7 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
                 <div className="h-px w-12 bg-border" />
                 {b.label && (
                   <span className="font-sans text-xs uppercase tracking-widest text-muted">
-                    {b.label}
+                    {b.label as string}
                   </span>
                 )}
                 <div className="h-px w-12 bg-border" />
@@ -123,9 +123,9 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
           const b = block as Record<string, unknown>
           return (
             <aside key={i} className="my-8 border-l-4 border-gold bg-gold/10 p-4">
-              <h4 className="mb-2 font-sans font-semibold text-gold">{b.heading}</h4>
+              <h4 className="mb-2 font-sans font-semibold text-gold">{b.heading as string}</h4>
               <p className="font-sans text-sm leading-relaxed text-foreground/80">
-                {b.body}
+                {b.body as string}
               </p>
             </aside>
           )
