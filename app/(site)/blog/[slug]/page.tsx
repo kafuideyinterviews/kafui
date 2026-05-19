@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { sanityFetch } from '@/sanity/lib/serverClient'
 import { blogBySlugQuery, relatedBlogsQuery } from '@/sanity/lib/queries'
-import type { BlogFull, BlogCard } from '@/sanity/lib/queries'
+import type { BlogFull } from '@/sanity/lib/queries'
+import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
 import BlogDetailRenderer from '@/components/blog/BlogDetailRenderer'
 import BlogCard from '@/components/blog/BlogCard'
 import ShareButtons from '@/components/interview/ShareButtons'
@@ -75,7 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   // Fetch related blog posts in same category
   const related = blog.category
-    ? await sanityFetch<BlogCard[]>({
+    ? await sanityFetch<BlogCardType[]>({
         query: relatedBlogsQuery,
         params: { slug, category: blog.category },
         tags: ['blog'],
