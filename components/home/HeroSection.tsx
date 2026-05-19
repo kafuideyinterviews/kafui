@@ -71,9 +71,9 @@ function SlideMedia({
     }
   }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const imgUrl = slide.type === 'image' && slide.image
+  const imgUrl = slide.type === 'image' && slide.image?.asset?.url
     ? `${slide.image.asset.url}?w=1800&q=80&fit=crop&crop=focalpoint&fp-y=0.25`
-    : slide.videoPoster
+    : slide.videoPoster?.asset?.url
       ? `${slide.videoPoster.asset.url}?w=1800&q=70`
       : null
 
