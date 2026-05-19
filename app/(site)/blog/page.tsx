@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { sanityFetch } from '@/sanity/lib/serverClient'
 import { blogsListQuery } from '@/sanity/lib/queries'
-import type { BlogCard } from '@/sanity/lib/queries'
+import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
 import BlogCard from '@/components/blog/BlogCard'
 
 export const metadata: Metadata = {
@@ -28,9 +28,9 @@ export default async function BlogPage({
   const { category } = await searchParams
   const activeCategory = category ?? 'All'
 
-  let blogs: BlogCard[] = []
+  let blogs: BlogCardType[] = []
   try {
-    blogs = await sanityFetch<BlogCard[]>({ query: blogsListQuery, tags: ['blog'] })
+    blogs = await sanityFetch<BlogCardType[]>({ query: blogsListQuery, tags: ['blog'] })
   } catch (error) {
     console.error('Blog page: Sanity fetch failed:', error)
   }
