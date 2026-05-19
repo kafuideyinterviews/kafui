@@ -100,7 +100,7 @@ export const siteSettingsSchema = defineType({
       options: { hotspot: true },
       fields: [defineField({ name: 'alt', type: 'string', title: 'Alt Text' })],
     }),
-    defineField({ name: 'patreonUrl',        title: 'Patreon Page URL',     type: 'url', initialValue: 'https://www.patreon.com/kafuidey' }),
+    defineField({ name: 'patreonUrl',        title: 'Patreon Page URL',     type: 'url', initialValue: 'https://patreon.com/KafuiDey?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_fan&utm_content=copyLink' }),
     defineField({ name: 'youtubeChannelUrl', title: 'YouTube Channel URL',  type: 'url' }),
     defineField({ name: 'spotifyUrl',        title: 'Spotify Show URL',     type: 'url' }),
     defineField({ name: 'twitterHandle',     title: 'Twitter/X Handle',     type: 'string' }),

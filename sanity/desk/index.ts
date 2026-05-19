@@ -71,6 +71,16 @@ export const structure: StructureResolver = (S) =>
 
               S.divider(),
 
+              // Blog Stories
+              S.listItem()
+                .title('Blog Stories')
+                .icon(DocumentsIcon)
+                .child(
+                  S.documentTypeList('blog')
+                    .title('Blog Stories')
+                    .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
+                ),
+
               // Gallery
               S.listItem()
                 .title('Gallery')

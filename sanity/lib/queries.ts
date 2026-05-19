@@ -105,6 +105,43 @@ export const milestonesQuery = groq`
   }
 `
 
+// ── Blog queries ──────────────────────────────────────────────────────────────
+const blogBodyFragment = groq`body[] {
+  ...,
+  _type == "image" => {
+    ...,
+    asset->{ url, metadata { dimensions, lqip } }, alt
+  }
+}`
+
+export const blogsListQuery = groq`
+  *[_type == "blog"] | order(publishedAt desc) {
+    _id, title, slug, author, excerpt, publishedAt,
+    category, tags, enableSocialShare,
+    youtubeUrl, spotifyUrl, interviewPageUrl, relatedBlog->{ title, slug },
+    ${coverImageFragment},
+  }
+`
+
+export const blogBySlugQuery = groq`
+  *[_type == "blog" && slug.current == $slug][0] {
+    _id, title, slug, author, excerpt, publishedAt,
+    category, tags, enableSocialShare,
+    youtubeUrl, spotifyUrl, interviewPageUrl, relatedBlog->{ _id, title, slug },
+    seoTitle, seoDescription, seoKeywords,
+    ${coverImageFragment},
+    ${blogBodyFragment},
+  }
+`
+
+export const relatedBlogsQuery = groq`
+  *[_type == "blog" && slug.current != $slug && category == $category]
+  | order(publishedAt desc) [0..2] {
+    _id, title, slug, author, excerpt, publishedAt, category,
+    ${coverImageFragment},
+  }
+`
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type SanityImage = {
   asset: { url: string; metadata: { dimensions: { width: number; height: number }; lqip: string } }
@@ -176,4 +213,21 @@ export type Testimonial = {
 export type Milestone = {
   _id: string; year: string; title: string; organisation?: string
   logo?: SanityImage; description?: string; order: number
+}
+
+export type BlogCard = {
+  _id: string; title: string; slug: { current: string }
+  author?: string; excerpt: string; publishedAt: string
+  category?: string; tags?: string[]
+  enableSocialShare: boolean
+  youtubeUrl?: string; spotifyUrl?: string; interviewPageUrl?: string
+  relatedBlog?: { title: string; slug: { current: string } }
+  coverImage: SanityImage
+}
+
+export type BlogBlock = Record<string, unknown> | { _type: 'image'; asset: SanityImage }
+
+export type BlogFull = BlogCard & {
+  seoTitle?: string; seoDescription?: string; seoKeywords?: string[]
+  body: BlogBlock[]
 }
