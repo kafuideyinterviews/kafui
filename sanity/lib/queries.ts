@@ -123,6 +123,15 @@ export const blogsListQuery = groq`
   }
 `
 
+export const featuredBlogsQuery = groq`
+  *[_type == "blog"] | order(publishedAt desc) [0..2] {
+    _id, title, slug, author, excerpt, publishedAt,
+    category, tags, enableSocialShare,
+    youtubeUrl, spotifyUrl, interviewPageUrl, relatedBlog->{ title, slug },
+    ${coverImageFragment},
+  }
+`
+
 export const blogBySlugQuery = groq`
   *[_type == "blog" && slug.current == $slug][0] {
     _id, title, slug, author, excerpt, publishedAt,
