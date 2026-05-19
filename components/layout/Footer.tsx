@@ -80,6 +80,33 @@ export default function Footer() {
             >
               Join on Patreon
             </a>
+
+            <div className="mt-8 space-y-3">
+              <a
+                href="mailto:info@kafuideyinterviews.com"
+                className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70 transition-colors hover:border-white/20 hover:text-white"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0 text-white/70">
+                  <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M2 7l10 7 10-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                info@kafuideyinterviews.com
+              </a>
+              <a
+                href="tel:+23325671832"
+                className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70 transition-colors hover:border-white/20 hover:text-white"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0 text-white/70">
+                  <path
+                    d="M7.5 2h9A1.5 1.5 0 0 1 18 3.5v17A1.5 1.5 0 0 1 16.5 22h-9A1.5 1.5 0 0 1 6 20.5v-17A1.5 1.5 0 0 1 7.5 2z"
+                    stroke="currentColor" strokeWidth="1.5"
+                  />
+                  <circle cx="12" cy="18.5" r="1" fill="currentColor" />
+                  <path d="M9.5 5h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                +233 256 718 32
+              </a>
+            </div>
           </div>
         </div>
 
