@@ -1,11 +1,11 @@
 import { defineField, defineType } from 'sanity'
-import { ArticleIcon, MicrophoneIcon } from '@sanity/icons'
+import { DocumentIcon, MicrophoneIcon } from '@sanity/icons'
 
 export const blogSchema = defineType({
   name: 'blog',
   title: 'Blog / Story',
   type: 'document',
-  icon: ArticleIcon,
+  icon: DocumentIcon,
   groups: [
     { name: 'content',  title: 'Content',  default: true },
     { name: 'media',    title: 'Media' },
