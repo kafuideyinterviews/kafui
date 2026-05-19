@@ -243,7 +243,6 @@ export default async function BlogPostPage({ params }: PageProps) {
             <ShareButtons
               url={`https://kafuideyinterviews.com/blog/${slug}`}
               title={blog.title}
-              description={blog.excerpt}
             />
           </div>
         )}
