@@ -7,15 +7,18 @@ import {
   siteSettingsQuery,
   featuredCarouselQuery,
   categoryTilesQuery,
+  featuredBlogsQuery,
   type SiteSettings,
   type InterviewCard,
   type CategoryTile,
+  type BlogCard as BlogCardType,
 } from '@/sanity/lib/queries'
 import HeroSection from '@/components/home/HeroSection'
 import FeaturedCarousel from '@/components/home/FeaturedCarousel'
 import SpotifySection from '@/components/home/SpotifySection'
 import YouTubeSection from '@/components/home/YouTubeSection'
 import PatreonWidget from '@/components/home/PatreonWidget'
+import BlogCard from '@/components/blog/BlogCard'
 
 export const metadata: Metadata = {
   title: 'Kafui Dey — Conversations That Matter',
@@ -29,12 +32,14 @@ export default async function HomePage() {
   let settings: SiteSettings | null = null
   let carouselInterviews: InterviewCard[] = []
   let categoryRaw: CategoryTile[] = []
+  let featuredBlogs: BlogCardType[] = []
 
   try {
-    ;[settings, carouselInterviews, categoryRaw] = await Promise.all([
+    ;[settings, carouselInterviews, categoryRaw, featuredBlogs] = await Promise.all([
       sanityFetch<SiteSettings>({ query: siteSettingsQuery, tags: ['siteSettings'] }),
       sanityFetch<InterviewCard[]>({ query: featuredCarouselQuery, tags: ['interviews'] }),
       sanityFetch<CategoryTile[]>({ query: categoryTilesQuery, tags: ['interviews'] }),
+      sanityFetch<BlogCardType[]>({ query: featuredBlogsQuery, tags: ['blog'] }),
     ])
   } catch (error) {
     console.error('Home page: Sanity fetch failed:', error)
@@ -101,6 +106,42 @@ export default async function HomePage() {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Latest Blog Stories ─────────────────────────────────── */}
+      {featuredBlogs.length > 0 && (
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+            <div className="mb-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+                  Latest Stories
+                </p>
+                <div className="hidden h-px w-24 bg-border sm:block" />
+              </div>
+              <Link
+                href="/blog"
+                className="font-sans text-xs font-semibold uppercase tracking-widest text-muted hover:text-gold transition-colors"
+              >
+                View All →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              {featuredBlogs.map((blog) => (
+                <BlogCard key={blog._id} blog={blog} />
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <Link
+                href="/blog"
+                className="inline-flex items-center justify-center rounded-sm bg-gold px-6 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-navy transition-colors hover:bg-[#b18f36]"
+              >
+                Read More Stories
+              </Link>
             </div>
           </div>
         </section>
