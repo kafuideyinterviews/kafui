@@ -333,6 +333,33 @@ export default function ContactPage() {
               </p>
             </div>
 
+            {/* Email contact */}
+            <div className="rounded-sm border border-border p-5">
+              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-gold">
+                Contact Details
+              </p>
+              <p className="mt-2 font-sans text-sm leading-relaxed text-muted">
+                Prefer to email us? Send your enquiry to{' '}
+                <a
+                  href="mailto:info@kafuideyinterviews.com"
+                  className="text-gold transition-colors hover:text-black"
+                >
+                  info@kafuideyinterviews.com
+                </a>
+                .
+              </p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-muted">
+                Call us directly at{' '}
+                <a
+                  href="tel:+23325671832"
+                  className="text-gold transition-colors hover:text-black"
+                >
+                  +233 256 718 32
+                </a>
+                .
+              </p>
+            </div>
+
             {/* Social links */}
             <div>
               <p className="font-sans text-xs font-semibold uppercase tracking-widest text-gold mb-4">
