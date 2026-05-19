@@ -105,7 +105,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <span>/</span>
               </>
             )}
-            <span className="text-foreground">{blog.title}</span>
+            <span className="text-foreground truncate max-w-[120px] sm:max-w-none overflow-hidden">
+  {blog.title}
+</span>
           </nav>
 
           {/* Category Label */}
