@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     'Learn about Kafui Dey — veteran Ghanaian journalist, broadcaster, and interviewer with over three decades in media.',
   keywords: [
     'Kafui Dey', 'about Kafui Dey', 'Ghanaian journalist', 'Ghana broadcaster',
-    'Joy FM', 'TV3 Ghana', 'GTV Ghana', 'African journalist', 'Kafui Dey biography',
+    'GHOne TV', 'Kapital Radio', 'GTV Ghana', 'African journalist', 'Kafui Dey biography',
     'Ghana media personality', 'Accra journalist', 'Kafui Dey interviews',
   ],
   alternates: { canonical: 'https://kafuideyinterviews.com/about' },
@@ -137,7 +137,7 @@ export default async function AboutPage() {
                   </p>
                   <p>
                     His career has spanned some of Ghana&apos;s most prominent media organisations,
-                    including Joy FM, TV3, and GTV. Whether hosting current affairs programmes or
+                    including GTV, GHOne TV, and Kapital Radio. Whether hosting current affairs programmes or
                     conducting in-depth personality interviews, Kafui brings the same discipline and
                     preparation to every conversation.
                   </p>
