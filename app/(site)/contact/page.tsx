@@ -58,7 +58,6 @@ export default function ContactPage() {
     const validation = validate(fields)
     if (Object.keys(validation).length) {
       setErrors(validation)
-      // Focus first error field
       const firstKey = Object.keys(validation)[0] as keyof Field
       const el = document.getElementById(`contact-${firstKey}`)
       if (el) el.focus()
@@ -68,13 +67,27 @@ export default function ContactPage() {
     setFormState('submitting')
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(fields),
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key:   '290767ea-6395-4dc0-9aec-12f32a0d1cdc',
+          subject:      `[Contact] ${fields.subject} — ${fields.name}`,
+          from_name:    fields.name,
+          replyto:      fields.email,
+          name:         fields.name,
+          email:        fields.email,
+          phone:        fields.phone.trim(),
+          organisation: fields.organisation?.trim() ?? '',
+          enquiry_type: fields.subject,
+          message:      fields.message.trim(),
+          botcheck:     '',
+        }),
       })
-      const data = await res.json() as { message?: string }
-      if (!res.ok) throw new Error(data.message ?? 'Server error')
+
+      const data = await res.json() as { success: boolean; message?: string }
+      if (!data.success) throw new Error(data.message ?? 'Submission failed')
+
       setFormState('success')
       setFields({ name: '', email: '', phone: '', subject: '', message: '', organisation: '' })
     } catch (err) {
