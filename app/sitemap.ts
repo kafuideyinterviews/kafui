@@ -8,6 +8,7 @@ const BASE_URL = 'https://kafuideyinterviews.com'
 const STATIC_ROUTES: { url: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { url: '/',             priority: 1.0, changeFrequency: 'daily' },
   { url: '/interviews',   priority: 0.9, changeFrequency: 'daily' },
+  { url: '/blog',         priority: 0.8, changeFrequency: 'daily' },
   { url: '/about',        priority: 0.8, changeFrequency: 'monthly' },
   { url: '/gallery',      priority: 0.7, changeFrequency: 'weekly' },
   { url: '/testimonials', priority: 0.6, changeFrequency: 'monthly' },
@@ -23,9 +24,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     useCdn:     true,
   })
 
-  const interviews: { slug: { current: string }; publishedAt: string }[] = await sanity.fetch(
-    `*[_type == "interview"] | order(publishedAt desc) { slug, publishedAt }`,
-  )
+  const [interviews, blogPosts] = await Promise.all([
+    sanity.fetch<{ slug: { current: string }; publishedAt: string }[]>(
+      `*[_type == "interview"] | order(publishedAt desc) { slug, publishedAt }`,
+    ),
+    sanity.fetch<{ slug: { current: string }; publishedAt: string }[]>(
+      `*[_type == "blog"] | order(publishedAt desc) { slug, publishedAt }`,
+    ),
+  ])
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map(({ url, priority, changeFrequency }) => ({
     url:             `${BASE_URL}${url}`,
@@ -41,5 +47,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.8,
   }))
 
-  return [...staticEntries, ...interviewEntries]
+  const blogEntries: MetadataRoute.Sitemap = blogPosts.map((p) => ({
+    url:             `${BASE_URL}/blog/${p.slug.current}`,
+    lastModified:    new Date(p.publishedAt),
+    changeFrequency: 'weekly',
+    priority:        0.7,
+  }))
+
+  return [...staticEntries, ...interviewEntries, ...blogEntries]
 }
