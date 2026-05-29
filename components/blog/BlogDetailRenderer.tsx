@@ -1,6 +1,12 @@
 import Image from 'next/image'
 import type { BlogBlock } from '@/sanity/lib/queries'
-import { urlFor } from '@/sanity/lib/image'
+
+// Helper: build a Sanity CDN URL from the resolved asset.url
+function sanityImageUrl(url: string, width?: number): string {
+  const params = new URLSearchParams({ auto: 'format', fit: 'max' })
+  if (width) params.set('w', String(width))
+  return `${url}?${params.toString()}`
+}
 
 export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) {
   return (
@@ -10,12 +16,11 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
 
         const blockType = (block as Record<string, unknown>)._type
 
-        // Handle block-level text (paragraphs, headings, etc.)
+        // ── Text blocks (paragraphs, headings, quotes) ─────────────────────
         if (blockType === 'block') {
-          const b = block as Record<string, unknown>
+          const b     = block as Record<string, unknown>
           const style = (b.style as string) || 'normal'
-          const text = (b.children as any[])?.map((c: any) => c.text).join('') || ''
-          const marks = (b.children as any[])?.[0]?.marks || []
+          const text  = (b.children as any[])?.map((c: any) => c.text).join('') || ''
 
           if (style === 'h2') {
             return (
@@ -23,28 +28,29 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
                 {text}
               </h2>
             )
-          } else if (style === 'h3') {
+          }
+          if (style === 'h3') {
             return (
               <h3 key={i} className="mt-10 mb-3 font-serif text-xl italic text-navy dark:text-cream">
                 {text}
               </h3>
             )
-          } else if (style === 'blockquote') {
+          }
+          if (style === 'blockquote') {
             return (
               <blockquote key={i} className="my-6 border-l-4 border-gold py-2 pl-4 italic text-foreground/80">
                 "{text}"
               </blockquote>
             )
-          } else {
-            return (
-              <p key={i} className="mb-4 leading-relaxed text-foreground/90">
-                {text}
-              </p>
-            )
           }
+          return (
+            <p key={i} className="mb-4 leading-relaxed text-foreground/90">
+              {text}
+            </p>
+          )
         }
 
-        // Handle pull quotes
+        // ── Pull quotes ─────────────────────────────────────────────────────
         if (blockType === 'pullQuote') {
           const b = block as Record<string, unknown>
           return (
@@ -62,32 +68,47 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
           )
         }
 
-        // Handle images
+        // ── Inline images (body images) ─────────────────────────────────────
         if (blockType === 'image' || blockType === 'storyImage') {
           const b = block as Record<string, unknown>
-          const imageData = (b.image || b.asset) as Record<string, unknown>
-          if (!imageData) return null
+
+          // For _type === 'image': asset fields are directly on the block (from blogBodyFragment spread)
+          // For _type === 'storyImage': image object is nested under b.image
+          const imageObj = blockType === 'storyImage'
+            ? (b.image as Record<string, unknown>)
+            : b
+
+          if (!imageObj) return null
+
+          const asset      = imageObj.asset as Record<string, unknown> | undefined
+          const assetUrl   = asset?.url as string | undefined
+          const metadata   = asset?.metadata as Record<string, unknown> | undefined
+          const dimensions = metadata?.dimensions as Record<string, unknown> | undefined
+          const lqip       = metadata?.lqip as string | undefined
+          const altText    = (imageObj.alt || b.alt) as string | undefined
+
+          if (!assetUrl) return null
+
+          const imgWidth  = (dimensions?.width  as number) || 800
+          const imgHeight = (dimensions?.height as number) || 600
 
           const layout = (b.layout as string) || 'full'
-          const layoutClasses = {
-            full: 'w-full my-8',
-            'inset-left': 'float-left w-1/2 mr-6 mb-4',
+          const layoutClasses: Record<string, string> = {
+            'full':        'w-full my-8',
+            'inset-left':  'float-left w-1/2 mr-6 mb-4',
             'inset-right': 'float-right w-1/2 ml-6 mb-4',
           }
 
-          const metadata = (imageData.asset as Record<string, unknown>)?.metadata as Record<string, unknown> || {}
-          const dimensions = metadata.dimensions as Record<string, unknown> || {}
-
           return (
-            <figure key={i} className={layoutClasses[layout as keyof typeof layoutClasses] || layoutClasses.full}>
+            <figure key={i} className={layoutClasses[layout] || layoutClasses.full}>
               <div className="overflow-hidden rounded-sm bg-muted">
                 <Image
-                  src={urlFor(imageData).auto('format').url()}
-                  alt={(imageData.alt as string) || 'Article image'}
-                  width={(dimensions.width as number) || 800}
-                  height={(dimensions.height as number) || 600}
-                  placeholder="blur"
-                  blurDataURL={(metadata.lqip as string) || undefined}
+                  src={sanityImageUrl(assetUrl, imgWidth)}
+                  alt={altText || 'Article image'}
+                  width={imgWidth}
+                  height={imgHeight}
+                  placeholder={lqip ? 'blur' : 'empty'}
+                  blurDataURL={lqip}
                   className="h-auto w-full object-cover"
                 />
               </div>
@@ -100,7 +121,7 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
           )
         }
 
-        // Handle dividers
+        // ── Dividers ────────────────────────────────────────────────────────
         if (blockType === 'divider') {
           const b = block as Record<string, unknown>
           return (
@@ -118,7 +139,7 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
           )
         }
 
-        // Handle fact boxes
+        // ── Fact boxes ──────────────────────────────────────────────────────
         if (blockType === 'factBox') {
           const b = block as Record<string, unknown>
           return (
@@ -131,7 +152,7 @@ export default function BlogDetailRenderer({ blocks }: { blocks: BlogBlock[] }) 
           )
         }
 
-        // Fallback for unknown blocks
+        // Fallback for unknown block types
         return null
       })}
     </>

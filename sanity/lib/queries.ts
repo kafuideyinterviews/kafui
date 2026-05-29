@@ -1,6 +1,10 @@
 import { groq } from 'next-sanity'
 
-const sanityImageFragment = groq`asset->{ url, metadata { dimensions, lqip } }, alt`
+// ── Shared image fragment ─────────────────────────────────────────────────────
+// _id is required so @sanity/image-url can build CDN URLs correctly.
+// url is fetched directly so components can use it without the builder.
+const sanityImageFragment = groq`asset->{ _id, url, metadata { dimensions, lqip } }, alt`
+
 const coverImageFragment  = groq`coverImage { ${sanityImageFragment} }`
 const guestPhotoFragment  = groq`guestPhoto  { ${sanityImageFragment} }`
 const storyBodyFragment   = groq`storyBody[] { ..., _type == "storyImage" => { ..., image { ${sanityImageFragment} } } }`
@@ -110,7 +114,7 @@ const blogBodyFragment = groq`body[] {
   ...,
   _type == "image" => {
     ...,
-    asset->{ url, metadata { dimensions, lqip } }, alt
+    asset->{ _id, url, metadata { dimensions, lqip } }, alt
   }
 }`
 
@@ -153,7 +157,14 @@ export const relatedBlogsQuery = groq`
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type SanityImage = {
-  asset: { url: string; metadata: { dimensions: { width: number; height: number }; lqip: string } }
+  asset: {
+    _id: string                                         // required for urlFor() / CDN URL building
+    url: string                                         // direct CDN URL — use this for <Image src>
+    metadata: {
+      dimensions: { width: number; height: number }
+      lqip: string
+    }
+  }
   alt: string
 }
 
@@ -168,75 +179,121 @@ export type HeroSlide = {
 }
 
 export type SiteSettings = {
-  heroHeadline?:     string
-  heroBio?:          string
-  heroSlides?:       HeroSlide[]
-  aboutBio?:         Record<string, unknown>[]
-  aboutPhoto?:       SanityImage
-  patreonUrl?:       string
+  heroHeadline?:      string
+  heroBio?:           string
+  heroSlides?:        HeroSlide[]
+  aboutBio?:          Record<string, unknown>[]
+  aboutPhoto?:        SanityImage
+  patreonUrl?:        string
   youtubeChannelUrl?: string
-  spotifyUrl?:       string
-  twitterHandle?:    string
-  instagramHandle?:  string
-  contactEmail?:     string
+  spotifyUrl?:        string
+  twitterHandle?:     string
+  instagramHandle?:   string
+  contactEmail?:      string
 }
 
 export type InterviewCard = {
-  _id: string; title: string; slug: { current: string }
-  guest: string; guestTitle?: string; excerpt: string
-  youtubeId?: string; youtubeUrl?: string; spotifyEpisodeId?: string
-  duration?: string; publishedAt: string
-  category?: string; tags?: string[]
-  isPatreonOnly: boolean; patreonTier?: string
-  featured: boolean; coverImage: SanityImage; guestPhoto?: SanityImage
-  openingQuote?: string
+  _id:            string
+  title:          string
+  slug:           { current: string }
+  guest:          string
+  guestTitle?:    string
+  excerpt:        string
+  youtubeId?:     string
+  youtubeUrl?:    string
+  spotifyEpisodeId?: string
+  duration?:      string
+  publishedAt:    string
+  category?:      string
+  tags?:          string[]
+  isPatreonOnly:  boolean
+  patreonTier?:   string
+  featured:       boolean
+  coverImage:     SanityImage
+  guestPhoto?:    SanityImage
+  openingQuote?:  string
 }
+
 export type PullQuote  = { _type: 'pullQuote';  _key: string; quote: string; attribution?: string }
 export type StoryImage = { _type: 'storyImage'; _key: string; image: SanityImage; alt: string; caption?: string; layout: 'full' | 'inset-left' | 'inset-right' }
 export type Divider    = { _type: 'divider';    _key: string; label?: string }
 export type FactBox    = { _type: 'factBox';    _key: string; heading: string; body: string }
 export type StoryBodyBlock = PullQuote | StoryImage | Divider | FactBox | Record<string, unknown>
+
 export type InterviewFull = InterviewCard & {
-  youtubeUrl?: string; openingQuote?: string; openingQuoteAttrib?: string
-  seoTitle?: string; seoDescription?: string; storyBody: StoryBodyBlock[]
+  youtubeUrl?:          string
+  openingQuote?:        string
+  openingQuoteAttrib?:  string
+  seoTitle?:            string
+  seoDescription?:      string
+  storyBody:            StoryBodyBlock[]
 }
+
 export type CategoryTile = { category: string; coverImage: SanityImage }
+
 export type GalleryItem = {
-  _key: string
-  image: SanityImage
-  caption?: string
+  _key:       string
+  image:      SanityImage
+  caption?:   string
   dateTaken?: string
-  featured?: boolean
+  featured?:  boolean
 }
 export type GalleryCategory = {
-  _id: string
-  title: string
-  slug: string
-  order?: number
+  _id:     string
+  title:   string
+  slug:    string
+  order?:  number
   images?: GalleryItem[]
 }
+
 export type Testimonial = {
-  _id: string; person: string; role: string; photo?: SanityImage
-  quote: string; videoUrl?: string; videoId?: string; featured: boolean; order: number
+  _id:       string
+  person:    string
+  role:      string
+  photo?:    SanityImage
+  quote:     string
+  videoUrl?: string
+  videoId?:  string
+  featured:  boolean
+  order:     number
 }
+
 export type Milestone = {
-  _id: string; year: string; title: string; organisation?: string
-  logo?: SanityImage; description?: string; order: number
+  _id:           string
+  year:          string
+  title:         string
+  organisation?: string
+  logo?:         SanityImage
+  description?:  string
+  order:         number
 }
 
 export type BlogCard = {
-  _id: string; title: string; slug: { current: string }
-  author?: string; excerpt: string; publishedAt: string
-  category?: string; tags?: string[]
+  _id:              string
+  title:            string
+  slug:             { current: string }
+  author?:          string
+  excerpt:          string
+  publishedAt:      string
+  category?:        string
+  tags?:            string[]
   enableSocialShare: boolean
-  youtubeUrl?: string; spotifyUrl?: string; interviewPageUrl?: string
-  relatedBlog?: { title: string; slug: { current: string } }
-  coverImage: SanityImage
+  youtubeUrl?:      string
+  spotifyUrl?:      string
+  interviewPageUrl?: string
+  relatedBlog?:     { title: string; slug: { current: string } }
+  coverImage:       SanityImage
 }
 
-export type BlogBlock = Record<string, unknown> | { _type: 'image'; asset: SanityImage }
+export type BlogBlock = Record<string, unknown> | {
+  _type:  'image'
+  asset:  SanityImage
+  alt?:   string
+}
 
 export type BlogFull = BlogCard & {
-  seoTitle?: string; seoDescription?: string; seoKeywords?: string[]
-  body: BlogBlock[]
+  seoTitle?:       string
+  seoDescription?: string
+  seoKeywords?:    string[]
+  body:            BlogBlock[]
 }

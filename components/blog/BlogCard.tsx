@@ -1,7 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
-import { urlFor } from '@/sanity/lib/image'
+
+// Helper: build a Sanity CDN URL from the resolved asset.url
+// Appends ?auto=format&fit=max for format negotiation (WebP/AVIF where supported).
+function sanityImageUrl(url: string, width?: number): string {
+  const params = new URLSearchParams({ auto: 'format', fit: 'max' })
+  if (width) params.set('w', String(width))
+  return `${url}?${params.toString()}`
+}
 
 export default function BlogCard({
   blog,
@@ -11,23 +18,33 @@ export default function BlogCard({
   priority?: boolean
 }) {
   const pubDate = new Date(blog.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
+    year:  'numeric',
     month: 'short',
-    day: 'numeric',
+    day:   'numeric',
   })
+
+  const { asset, alt } = blog.coverImage
+  const imgSrc    = sanityImageUrl(asset.url, 800)
+  const imgWidth  = asset.metadata.dimensions.width
+  const imgHeight = asset.metadata.dimensions.height
+  const imgLqip   = asset.metadata.lqip
 
   return (
     <article className="group flex flex-col h-full">
+
       {/* ── Featured Image ───────────────────────────────────── */}
-      <Link href={`/blog/${blog.slug.current}`} className="relative mb-4 block overflow-hidden rounded-sm">
+      <Link
+        href={`/blog/${blog.slug.current}`}
+        className="relative mb-4 block overflow-hidden rounded-sm"
+      >
         <div className="aspect-video overflow-hidden bg-muted">
           <Image
-            src={urlFor(blog.coverImage).auto('format').url()}
-            alt={blog.coverImage.alt || blog.title}
-            width={blog.coverImage.asset.metadata.dimensions.width}
-            height={blog.coverImage.asset.metadata.dimensions.height}
+            src={imgSrc}
+            alt={alt || blog.title}
+            width={imgWidth}
+            height={imgHeight}
             placeholder="blur"
-            blurDataURL={blog.coverImage.asset.metadata.lqip}
+            blurDataURL={imgLqip}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             priority={priority}
           />
@@ -128,6 +145,7 @@ export default function BlogCard({
           </svg>
         </Link>
       </div>
+
     </article>
   )
 }
