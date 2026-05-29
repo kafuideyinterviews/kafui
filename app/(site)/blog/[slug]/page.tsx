@@ -11,50 +11,90 @@ import Link from 'next/link'
 
 export const revalidate = 60
 
+// ── Constants ─────────────────────────────────────────────────────────────────
+const SITE_URL     = 'https://kafuideyinterviews.com'
+// Absolute URL to your default OG image (logo/brand image in /public)
+// Used as fallback when a blog post has no coverImage
+const DEFAULT_OG   = `${SITE_URL}/og-default.jpg`
+
 type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-// Generate metadata for each blog post
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+// ── Metadata ──────────────────────────────────────────────────────────────────
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+
   const blog = await sanityFetch<BlogFull>({
     query: blogBySlugQuery,
     params: { slug },
     tags: ['blog'],
   }).catch(() => null)
 
-  if (!blog) {
-    return { title: 'Blog Post Not Found' }
-  }
+  if (!blog) return { title: 'Blog Post Not Found' }
 
-  const title = blog.seoTitle || blog.title
+  const title       = blog.seoTitle || blog.title
   const description = blog.seoDescription || blog.excerpt
-  const ogImage = blog.coverImage
-    ? `${blog.coverImage.asset.url}?w=1200&h=630&fit=crop`
-    : undefined
+  const pageUrl     = `${SITE_URL}/blog/${slug}`
+
+  // Build the OG image URL from the resolved Sanity CDN url.
+  // - auto=format  → serves WebP/AVIF where supported
+  // - w=1200&h=630 → standard OG dimensions
+  // - fit=crop      → fills the frame without letterboxing
+  // - q=80          → good quality at reasonable file size
+  //
+  // Falls back to DEFAULT_OG if the post has no coverImage or asset.url.
+  const rawCoverUrl = blog.coverImage?.asset?.url
+  const ogImageUrl  = rawCoverUrl
+    ? `${rawCoverUrl}?auto=format&w=1200&h=630&fit=crop&q=80`
+    : DEFAULT_OG
+
+  const ogImages = [
+    {
+      url:    ogImageUrl,
+      width:  1200,
+      height: 630,
+      alt:    blog.coverImage?.alt || title,
+    },
+  ]
 
   return {
-    title: `${title} — Kafui Dey`,
+    title:       `${title} — Kafui Dey`,
     description,
-    keywords: blog.seoKeywords,
+    keywords:    blog.seoKeywords,
+
+    // ── Open Graph (Facebook, WhatsApp, LinkedIn) ────────────────────────────
     openGraph: {
       title,
       description,
-      type: 'article',
+      type:          'article',
+      url:           pageUrl,
       publishedTime: blog.publishedAt,
-      authors: blog.author ? [blog.author] : [],
-      tags: blog.tags,
-      images: ogImage ? [{ url: ogImage }] : [],
-      url: `https://kafuideyinterviews.com/blog/${slug}`,
+      authors:       blog.author ? [blog.author] : [],
+      tags:          blog.tags,
+      images:        ogImages,
+    },
+
+    // ── Twitter / X Card ─────────────────────────────────────────────────────
+    // WhatsApp also reads twitter:image as a fallback on some clients.
+    twitter: {
+      card:        'summary_large_image',
+      title,
+      description,
+      images:      [ogImageUrl],
+    },
+
+    // ── Canonical URL ─────────────────────────────────────────────────────────
+    alternates: {
+      canonical: pageUrl,
     },
   }
 }
 
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params
+
   const blog = await sanityFetch<BlogFull>({
     query: blogBySlugQuery,
     params: { slug },
@@ -64,30 +104,30 @@ export default async function BlogPostPage({ params }: PageProps) {
     return null
   })
 
-  if (!blog) {
-    notFound()
-  }
+  if (!blog) notFound()
 
   const pubDate = new Date(blog.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
+    year:  'numeric',
     month: 'long',
-    day: 'numeric',
+    day:   'numeric',
   })
 
   // Fetch related blog posts in same category
   const related = blog.category
     ? await sanityFetch<BlogCardType[]>({
-        query: relatedBlogsQuery,
+        query:  relatedBlogsQuery,
         params: { slug, category: blog.category },
-        tags: ['blog'],
+        tags:   ['blog'],
       }).catch(() => [])
     : []
 
   return (
     <main className="min-h-screen bg-background">
-      {/* ── Article Header ────────────────────────────────────── */}
+
+      {/* ── Article Header ───────────────────────────────────────────────────── */}
       <article className="border-b border-border">
         <header className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+
           {/* Breadcrumb */}
           <nav className="mb-8 flex items-center gap-2 font-sans text-xs uppercase tracking-widest text-muted">
             <Link href="/blog" className="transition-colors hover:text-foreground">
@@ -106,8 +146,8 @@ export default async function BlogPostPage({ params }: PageProps) {
               </>
             )}
             <span className="text-foreground truncate max-w-[120px] sm:max-w-none overflow-hidden">
-  {blog.title}
-</span>
+              {blog.title}
+            </span>
           </nav>
 
           {/* Category Label */}
@@ -129,14 +169,14 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           )}
 
-          {/* Meta (Author, Date, Reading Time) */}
+          {/* Meta — Author · Date */}
           <div className="mb-8 flex flex-wrap items-center gap-4 border-t border-border pt-6 font-sans text-sm text-muted">
             {blog.author && <span>By {blog.author}</span>}
             {blog.author && <span className="text-border">·</span>}
             <time dateTime={blog.publishedAt}>{pubDate}</time>
           </div>
 
-          {/* Related Links Section */}
+          {/* Related Links */}
           {(blog.youtubeUrl || blog.spotifyUrl || blog.interviewPageUrl || blog.relatedBlog) && (
             <div className="space-y-3 bg-border/10 p-4 rounded-sm mb-8">
               <p className="font-sans text-xs font-semibold uppercase tracking-widest text-gold">
@@ -198,11 +238,11 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
         </header>
 
-        {/* Featured Image */}
-        {blog.coverImage && (
+        {/* ── Featured / Hero Image ──────────────────────────────────────────── */}
+        {blog.coverImage?.asset?.url && (
           <div className="border-t border-border overflow-hidden">
             <img
-              src={`${blog.coverImage.asset.url}?w=1200&q=80&fit=max`}
+              src={`${blog.coverImage.asset.url}?auto=format&w=1200&q=80&fit=max`}
               alt={blog.coverImage.alt || blog.title}
               className="w-full h-auto max-h-80 object-contain"
             />
@@ -210,7 +250,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         )}
       </article>
 
-      {/* ── Article Content ───────────────────────────────────── */}
+      {/* ── Article Body ─────────────────────────────────────────────────────── */}
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="prose prose-invert max-w-none">
           <BlogDetailRenderer blocks={blog.body} />
@@ -243,14 +283,14 @@ export default async function BlogPostPage({ params }: PageProps) {
               Share This Story
             </p>
             <ShareButtons
-              url={`https://kafuideyinterviews.com/blog/${slug}`}
+              url={`${SITE_URL}/blog/${slug}`}
               title={blog.title}
             />
           </div>
         )}
       </div>
 
-      {/* ── Related Posts ─────────────────────────────────────── */}
+      {/* ── Related Posts ─────────────────────────────────────────────────────── */}
       {related.length > 0 && (
         <section className="border-t border-border bg-border/5 py-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -270,6 +310,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </section>
       )}
+
     </main>
   )
 }
