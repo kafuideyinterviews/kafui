@@ -5,11 +5,11 @@ import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
 import BlogCard from '@/components/blog/BlogCard'
 
 export const metadata: Metadata = {
-  title: 'Blog — Kafui Dey',
+  title: 'Blog',
   description:
     'Insights and stories from our interviews. Explore deeper conversations and key moments.',
   openGraph: {
-    title: 'Blog — Kafui Dey',
+    title: 'Blog',
     description: 'Insights and stories from our interviews.',
     url: 'https://kafuideyinterviews.com/blog',
     siteName: 'Kafui Dey Interviews',

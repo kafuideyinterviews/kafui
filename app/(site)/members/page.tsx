@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://kafuideyinterviews.com/members' },
   robots: { index: false, follow: false },
   openGraph: {
-    title:       'Members — Kafui Dey',
+    title:       'Members',
     description: 'Exclusive content for Patreon members.',
     url:         'https://kafuideyinterviews.com/members',
     siteName:    'Kafui Dey Interviews',

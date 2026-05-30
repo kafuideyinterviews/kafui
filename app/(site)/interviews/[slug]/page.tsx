@@ -41,10 +41,10 @@ export async function generateMetadata({
   const ogImage = urlFor(interview.coverImage).width(1200).height(630).quality(85).url()
 
   return {
-    title:       `${interview.seoTitle ?? interview.title} — Kafui Dey`,
+    title:       `${interview.seoTitle ?? interview.title}`,
     description: interview.seoDescription ?? interview.excerpt,
     openGraph: {
-      title:       `${interview.title} — Kafui Dey`,
+      title:       `${interview.title}`,
       description: interview.excerpt,
       images:      [{ url: ogImage, width: 1200, height: 630 }],
       url:         `https://kafuideyinterviews.com/interviews/${slug}`,

@@ -6,11 +6,11 @@ import InterviewCardComponent from '@/components/interview/InterviewCard'
 
 
 export const metadata: Metadata = {
-  title: 'All Interviews — Kafui Dey',
+  title: 'All Interviews',
   description:
     "A library of in-depth conversations with Ghana's most compelling voices — in politics, entertainment, business, and culture.",
   openGraph: {
-    title: 'All Interviews — Kafui Dey',
+    title: 'All Interviews',
     description: "Deep conversations with Ghana's most compelling voices.",
     url: 'https://kafuideyinterviews.com/interviews',
     siteName: 'Kafui Dey Interviews',

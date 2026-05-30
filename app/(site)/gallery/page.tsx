@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "A visual chronicle of Kafui Dey's career — from the studio to the field, across two decades of Ghanaian broadcasting.",
   alternates: { canonical: 'https://kafuideyinterviews.com/gallery' },
   openGraph: {
-    title: 'Gallery — Kafui Dey',
+    title: 'Gallery',
     description: "A visual chronicle of Kafui Dey's career across two decades.",
     url:      'https://kafuideyinterviews.com/gallery',
     siteName: 'Kafui Dey Interviews',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Gallery — Kafui Dey',
+    title:       'Gallery',
     description: "A visual chronicle of Kafui Dey's career.",
     images:      ['https://kafuideyinterviews.com/og-default.jpg'],
   },

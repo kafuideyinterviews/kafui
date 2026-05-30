@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Hear what guests, colleagues, and viewers say about their experience with Kafui Dey.',
   alternates: { canonical: 'https://kafuideyinterviews.com/testimonials' },
   openGraph: {
-    title: 'Testimonials — Kafui Dey',
+    title: 'Testimonials',
     description: 'Words from guests, colleagues, and viewers.',
     url:      'https://kafuideyinterviews.com/testimonials',
     siteName: 'Kafui Dey Interviews',
