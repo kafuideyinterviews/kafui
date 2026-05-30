@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/mail',
-        destination: 'https://privateemail.com/',
+        destination: 'https://privateemail.com/login',
         permanent: false,
       },
     ]
