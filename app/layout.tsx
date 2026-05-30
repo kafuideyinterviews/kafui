@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://kafuideyinterviews.com'),
   title: {
     default:  'Kafui Dey — Conversations That Matter',
-    template: '%s | Kafui Dey',
+    template: '%s | Kafui Dey Interviews',
   },
   description:
     "In-depth interviews with Ghana's most compelling voices in politics, entertainment, business, and culture — told as longform stories.",
