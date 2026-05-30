@@ -3,7 +3,6 @@ import path from 'path'
 import withPWA from '@ducanh2912/next-pwa'
 
 const nextConfig: NextConfig = {
-  // @react-pdf/renderer and its sub-packages use Node.js-only APIs; prevent bundling
   serverExternalPackages: [
     '@react-pdf/renderer',
     '@react-pdf/fns',
@@ -31,17 +30,24 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Ensure strict TypeScript
   typescript: {
     ignoreBuildErrors: false,
   },
   eslint: {
     ignoreDuringBuilds: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/mail',
+        destination: 'https://privateemail.com/',
+        permanent: false,
+      },
+    ]
+  },
   async headers() {
     return [
       {
-        // Manifest must not be cached aggressively
         source: '/manifest.json',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
