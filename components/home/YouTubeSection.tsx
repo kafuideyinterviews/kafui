@@ -206,7 +206,7 @@ export default function YouTubeSection() {
         {/* More videos CTA */}
         <div className="mt-8 flex justify-center">
           <a
-            href="https://www.youtube.com/@KafuiDey"
+            href="https://www.youtube.com/@KafuiDeymc"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-sm border border-gold/40 px-6 py-2.5 font-sans text-xs font-semibold uppercase tracking-widest text-gold transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-navy hover:shadow-[0_6px_20px_rgba(201,168,76,0.25)]"
