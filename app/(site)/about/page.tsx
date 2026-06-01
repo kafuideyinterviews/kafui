@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description:
     'Learn about Kafui Dey — veteran Ghanaian journalist, broadcaster, and interviewer with over three decades in media.',
   keywords: [
-    'Kafui Dey', 'about Kafui Dey', 'Kafui Dey Interviews''Ghanaian journalist', 'Ghana broadcaster',
+    'Kafui Dey', 'about Kafui Dey', 'Kafui Dey Interviews','Ghanaian journalist', 'Ghana broadcaster',
     'Joy FM', 'TV3 Ghana', 'GTV Ghana', 'African journalist', 'Kafui Dey biography',
     'Ghana media personality', 'Accra journalist', 'Kafui Dey interviews',
   ],
