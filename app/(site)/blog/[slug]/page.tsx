@@ -38,15 +38,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const pageUrl     = `${SITE_URL}/blog/${slug}`
 
   // Build the OG image URL from the resolved Sanity CDN url.
-  // - auto=format  → serves WebP/AVIF where supported
+  // - fm=jpg        → forces JPEG output for maximum social preview compatibility
   // - w=1200&h=630 → standard OG dimensions
   // - fit=crop      → fills the frame without letterboxing
-  // - q=80          → good quality at reasonable file size
+  // - q=60          → keeps thumbnail size under WhatsApp/Facebook limits
   //
   // Falls back to DEFAULT_OG if the post has no coverImage or asset.url.
   const rawCoverUrl = blog.coverImage?.asset?.url
   const ogImageUrl  = rawCoverUrl
-    ? `${rawCoverUrl}?auto=format&w=1200&h=630&fit=crop&q=80`
+    ? `${rawCoverUrl}?w=1200&h=630&fit=crop&fm=jpg&q=60`
     : DEFAULT_OG
 
   const ogImages = [

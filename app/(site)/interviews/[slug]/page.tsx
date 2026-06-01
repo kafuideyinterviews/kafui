@@ -20,6 +20,9 @@ import ShareButtons from '@/components/interview/ShareButtons'
 
 export const revalidate = 60
 
+const SITE_URL = 'https://kafuideyinterviews.com'
+const DEFAULT_OG = `${SITE_URL}/og-default.jpg`
+
 // ─── generateStaticParams ────────────────────────────────────────────────────
 export async function generateStaticParams() {
   const slugs: { slug: { current: string } }[] = await client.fetch(
@@ -38,25 +41,38 @@ export async function generateMetadata({
   const interview: InterviewFull | null = await client.fetch(interviewBySlugQuery, { slug })
   if (!interview) return {}
 
-  const ogImage = urlFor(interview.coverImage).width(1200).height(630).quality(85).url()
+  const rawCoverUrl = interview.coverImage?.asset?.url
+  const ogImage = rawCoverUrl
+    ? `${rawCoverUrl}?w=1200&h=630&fit=crop&fm=jpg&q=60`
+    : DEFAULT_OG
+
+  const pageUrl = `${SITE_URL}/interviews/${slug}`
 
   return {
     title:       `${interview.seoTitle ?? interview.title}`,
     description: interview.seoDescription ?? interview.excerpt,
     openGraph: {
-      title:       `${interview.title}`,
-      description: interview.excerpt,
-      images:      [{ url: ogImage, width: 1200, height: 630 }],
-      url:         `https://kafuideyinterviews.com/interviews/${slug}`,
-      siteName:    'Kafui Dey Interviews',
-      type:        'article',
+      title:         interview.title,
+      description:   interview.excerpt,
+      type:          'article',
+      url:           pageUrl,
+      siteName:      'Kafui Dey Interviews',
       publishedTime: interview.publishedAt,
+      images: [{
+        url:    ogImage,
+        width:  1200,
+        height: 630,
+        alt:    interview.coverImage?.alt || interview.title,
+      }],
     },
     twitter: {
       card:        'summary_large_image',
       title:       interview.title,
       description: interview.excerpt,
       images:      [ogImage],
+    },
+    alternates: {
+      canonical: pageUrl,
     },
   }
 }
