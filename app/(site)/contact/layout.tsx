@@ -4,6 +4,10 @@ export const metadata: Metadata = {
   title: 'Contact',
   description:
     'Get in touch with Kafui Dey — for media enquiries, interview requests, collaborations, or general correspondence.',
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'contact Kafui Dey', 'media enquiries',
+    'interview requests', 'press contact', 'collaboration enquiries',
+  ],
   alternates: { canonical: 'https://kafuideyinterviews.com/contact' },
   openGraph: {
     title:       'Contact — Kafui Dey',

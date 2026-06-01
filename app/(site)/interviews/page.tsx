@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: 'All Interviews',
   description:
     "A library of in-depth conversations with Ghana's most compelling voices — in politics, entertainment, business, and culture.",
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'Ghana interviews', 'conversation archive',
+    'African media', 'broadcast journalism', 'longform interview',
+  ],
   openGraph: {
     title: 'All Interviews',
     description: "Deep conversations with Ghana's most compelling voices.",

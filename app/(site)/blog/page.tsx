@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   title: 'Blog',
   description:
     'Insights and stories from our interviews. Explore deeper conversations and key moments.',
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'interview blog', 'Ghana interviews',
+    'longform stories', 'media analysis', 'African journalism',
+  ],
   openGraph: {
     title: 'Blog',
     description: 'Insights and stories from our interviews.',

@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   title: 'Members',
   description:
     'Exclusive interviews and content for Patreon members. Join to unlock full archives, unedited transcripts, and early access.',
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'Patreon members', 'exclusive interviews',
+    'behind the scenes', 'member benefits', 'premium content',
+  ],
   alternates: { canonical: 'https://kafuideyinterviews.com/members' },
   robots: { index: false, follow: false },
   openGraph: {

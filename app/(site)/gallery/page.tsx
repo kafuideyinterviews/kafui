@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   title: 'Gallery',
   description:
     "A visual chronicle of Kafui Dey's career — from the studio to the field, across two decades of Ghanaian broadcasting.",
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'photo gallery', 'Ghanaian broadcasting',
+    'media archive', 'visual stories',
+  ],
   alternates: { canonical: 'https://kafuideyinterviews.com/gallery' },
   openGraph: {
     title: 'Gallery',

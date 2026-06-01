@@ -4,6 +4,10 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata = {
   title: 'Page Not Found — Kafui Dey',
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', '404 page', 'Ghana journalist',
+    'interviews Ghana', 'broadcast journalism',
+  ],
 }
 
 export default function NotFound() {

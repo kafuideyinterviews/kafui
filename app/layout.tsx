@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   description:
     "In-depth interviews with Ghana's most compelling voices in politics, entertainment, business, and culture — told as longform stories.",
   keywords: [
-    'Kafui Dey', 'Ghana journalist', 'Ghanaian broadcaster', 'interviews Ghana',
-    'Joy FM', 'TV3 Ghana', 'African media', 'longform journalism',
+    'Kafui Dey Interviews', 'Kafui Dey', 'Ghana journalist', 'Ghanaian broadcaster',
+    'interviews Ghana', 'Joy FM', 'TV3 Ghana', 'African media', 'longform journalism',
   ],
   authors: [{ name: 'Kafui Dey', url: 'https://kafuideyinterviews.com' }],
   creator: 'Kafui Dey',

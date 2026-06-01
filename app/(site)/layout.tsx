@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   },
   description:
     'In-depth interviews with Ghana\'s most compelling voices in politics, entertainment, business, and culture — told as longform stories.',
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'Ghana interviews', 'broadcast journalism',
+    'longform stories', 'African media', 'media archive',
+  ],
   openGraph: {
     siteName: 'Kafui Dey Interviews',
     locale:   'en_GH',

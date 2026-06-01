@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   title: 'Kafui Dey — Conversations That Matter',
   description:
     "In-depth interviews with Ghana's most compelling voices in politics, entertainment, business, and culture.",
+  keywords: [
+    'Kafui Dey Interviews', 'Kafui Dey', 'Ghana interviews', 'longform journalism',
+    'African media', 'broadcast journalism', 'Joy FM', 'TV3 Ghana',
+  ],
 }
 
 export const revalidate = 60

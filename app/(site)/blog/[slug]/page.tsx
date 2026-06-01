@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   ]
 
   return {
-    title:       `${title} — Kafui Dey`,
+    title:       title,
     description,
     keywords:    blog.seoKeywords,
 
