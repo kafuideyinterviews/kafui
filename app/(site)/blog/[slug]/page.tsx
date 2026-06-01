@@ -242,7 +242,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {blog.coverImage?.asset?.url && (
           <div className="border-t border-border overflow-hidden">
             <img
-              src={`${blog.coverImage.asset.url}?auto=format&w=1200&q=80&fit=max`}
+              src={`${blog.coverImage.asset.url}?w=1200&h=630&fit=crop&fm=jpg&q=60`}
               alt={blog.coverImage.alt || blog.title}
               className="w-full h-auto max-h-80 object-contain"
             />
