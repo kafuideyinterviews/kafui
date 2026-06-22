@@ -7,6 +7,7 @@ import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
 import BlogDetailRenderer from '@/components/blog/BlogDetailRenderer'
 import BlogCard from '@/components/blog/BlogCard'
 import ShareButtons from '@/components/interview/ShareButtons'
+import ViewTracker from '@/components/ui/ViewTracker'
 import Link from 'next/link'
 
 export const revalidate = 60
@@ -123,8 +124,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-background">
-
-      {/* ── Article Header ───────────────────────────────────────────────────── */}
+      <ViewTracker slug={slug} type="blog" />
       <article className="border-b border-border">
         <header className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
 

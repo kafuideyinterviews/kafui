@@ -17,6 +17,7 @@ import BookReader from '@/components/interview/BookReader'
 import ReadingProgressBar from '@/components/interview/ReadingProgressBar'
 import InterviewCardComponent from '@/components/interview/InterviewCard'
 import ShareButtons from '@/components/interview/ShareButtons'
+import ViewTracker from '@/components/ui/ViewTracker'
 
 export const revalidate = 60
 
@@ -112,6 +113,7 @@ export default async function InterviewStoryPage({
     <>
       {/* Reading progress bar */}
       <ReadingProgressBar />
+      <ViewTracker slug={slug} type="interview" />
 
       <article className="min-h-screen bg-background">
 

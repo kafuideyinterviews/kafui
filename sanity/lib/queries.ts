@@ -32,9 +32,15 @@ export const interviewsListQuery = groq`
   *[_type == "interview"] | order(publishedAt desc) {
     _id, title, slug, guest, guestTitle, excerpt,
     youtubeId, youtubeUrl, spotifyEpisodeId, duration, publishedAt,
-    category, tags,
+    category, tags, views,
     isPatreonOnly, patreonTier, featured,
     ${coverImageFragment}, ${guestPhotoFragment},
+  }
+`
+export const mostPopularInterviewsQuery = groq`
+  *[_type == "interview"] | order(coalesce(views, 0) desc) [0..4] {
+    _id, title, slug, guest, publishedAt, views, category,
+    ${coverImageFragment},
   }
 `
 export const featuredInterviewQuery = groq`
@@ -110,6 +116,12 @@ export const milestonesQuery = groq`
 `
 
 // ── Blog queries ──────────────────────────────────────────────────────────────
+export const mostPopularBlogsQuery = groq`
+  *[_type == "blog"] | order(coalesce(views, 0) desc) [0..4] {
+    _id, title, slug, publishedAt, views, category, author,
+    ${coverImageFragment},
+  }
+`
 const blogBodyFragment = groq`body[] {
   ...,
   _type == "image" => {
@@ -121,7 +133,7 @@ const blogBodyFragment = groq`body[] {
 export const blogsListQuery = groq`
   *[_type == "blog"] | order(publishedAt desc) {
     _id, title, slug, author, excerpt, publishedAt,
-    category, tags, enableSocialShare,
+    category, tags, views, enableSocialShare,
     youtubeUrl, spotifyUrl, interviewPageUrl, relatedBlog->{ title, slug },
     ${coverImageFragment},
   }
@@ -208,10 +220,11 @@ export type InterviewCard = {
   tags?:          string[]
   isPatreonOnly:  boolean
   patreonTier?:   string
-  featured:       boolean
-  coverImage:     SanityImage
-  guestPhoto?:    SanityImage
-  openingQuote?:  string
+  featured:        boolean
+  views?:          number
+  coverImage:      SanityImage
+  guestPhoto?:     SanityImage
+  openingQuote?:   string
 }
 
 export type PullQuote  = { _type: 'pullQuote';  _key: string; quote: string; attribution?: string }
@@ -282,6 +295,7 @@ export type BlogCard = {
   spotifyUrl?:      string
   interviewPageUrl?: string
   relatedBlog?:     { title: string; slug: { current: string } }
+  views?:           number
   coverImage:       SanityImage
 }
 

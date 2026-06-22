@@ -240,6 +240,7 @@ export const interviewSchema = defineType({
       description: 'Primary category — used for filtering on the interviews listing page.',
       options: {
         list: [
+          { title: 'General',       value: 'General' },
           { title: 'Politics',      value: 'Politics' },
           { title: 'Entertainment', value: 'Entertainment' },
           { title: 'Business',      value: 'Business' },
@@ -249,7 +250,7 @@ export const interviewSchema = defineType({
           { title: 'Music',         value: 'Music' },
           { title: 'Film',          value: 'Film' },
           { title: 'Philanthropy',  value: 'Philanthropy' },
-          { title: 'Health',         value: 'Health' },
+          { title: 'Health',        value: 'Health' },
         ],
         layout: 'radio',
         direction: 'horizontal',
@@ -306,6 +307,15 @@ export const interviewSchema = defineType({
       type: 'text',
       group: 'meta',
       rows: 2,
+    }),
+    defineField({
+      name: 'views',
+      title: 'View Count',
+      type: 'number',
+      group: 'meta',
+      description: 'Auto-incremented page view count.',
+      initialValue: 0,
+      readOnly: true,
     }),
   ],
 

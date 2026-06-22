@@ -61,6 +61,7 @@ export const blogSchema = defineType({
       description: 'Primary category — used for filtering blog stories.',
       options: {
         list: [
+          { title: 'General',       value: 'General' },
           { title: 'Politics',      value: 'Politics' },
           { title: 'Entertainment', value: 'Entertainment' },
           { title: 'Business',      value: 'Business' },
@@ -221,6 +222,15 @@ export const blogSchema = defineType({
       group: 'meta',
       of: [{ type: 'string' }],
       description: 'Comma-separated keywords or tags for this story',
+    }),
+    defineField({
+      name: 'views',
+      title: 'View Count',
+      type: 'number',
+      group: 'meta',
+      description: 'Auto-incremented page view count.',
+      initialValue: 0,
+      readOnly: true,
     }),
   ],
 

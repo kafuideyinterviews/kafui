@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { sanityFetch } from '@/sanity/lib/serverClient'
-import { blogsListQuery } from '@/sanity/lib/queries'
+import { blogsListQuery, mostPopularBlogsQuery } from '@/sanity/lib/queries'
 import type { BlogCard as BlogCardType } from '@/sanity/lib/queries'
+import type { PopularItem } from '@/components/ui/PopularSidebar'
 import BlogCard from '@/components/blog/BlogCard'
+import PopularSidebar from '@/components/ui/PopularSidebar'
+import ShowMoreGrid from '@/components/ui/ShowMoreGrid'
+import MonthFilter from '@/components/ui/MonthFilter'
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -22,19 +27,24 @@ export const metadata: Metadata = {
 
 export const revalidate = 60
 
-const CATEGORY_ORDER = ['Politics', 'Entertainment', 'Business', 'Culture', 'Sports', 'Media', 'Music', 'Film', 'Philanthropy', 'Health']
+const CATEGORY_ORDER = ['General', 'Politics', 'Entertainment', 'Business', 'Culture', 'Sports', 'Media', 'Music', 'Film', 'Philanthropy', 'Health']
 
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string; month?: string }>
 }) {
-  const { category } = await searchParams
+  const { category, month } = await searchParams
   const activeCategory = category ?? 'All'
+  const activeMonth = month ?? ''
 
   let blogs: BlogCardType[] = []
+  let popular: PopularItem[] = []
   try {
-    blogs = await sanityFetch<BlogCardType[]>({ query: blogsListQuery, tags: ['blog'] })
+    ;[blogs, popular] = await Promise.all([
+      sanityFetch<BlogCardType[]>({ query: blogsListQuery, tags: ['blog'] }),
+      sanityFetch<PopularItem[]>({ query: mostPopularBlogsQuery, tags: ['blog'] }),
+    ])
   } catch (error) {
     console.error('Blog page: Sanity fetch failed:', error)
   }
@@ -44,76 +54,123 @@ export default async function BlogPage({
   )
   const categories = ['All', ...usedCategories]
 
-  const filtered =
-    activeCategory === 'All'
-      ? blogs
-      : blogs.filter((b) => b.category === activeCategory)
+  // Derive unique months (YYYY-MM) from all blogs, newest first
+  const availableMonths = Array.from(
+    new Set(blogs.map((b) => b.publishedAt.slice(0, 7)))
+  ).sort((a, b) => b.localeCompare(a))
+
+  const filtered = blogs
+    .filter((b) => activeCategory === 'All' || b.category === activeCategory)
+    .filter((b) => !activeMonth || b.publishedAt.startsWith(activeMonth))
 
   return (
     <main className="min-h-screen bg-background">
+
       {/* ── Page Header ──────────────────────────────────────── */}
-      <header className="border-b border-border pb-16 pt-40 text-center">
-        <p className="mb-3 font-sans text-xs font-semibold uppercase tracking-[0.25em] text-gold">
+      <header className="border-b border-border pb-10 pt-36 text-center">
+        <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.25em] text-gold">
           Stories & Insights
         </p>
         <h1 className="font-serif text-5xl md:text-6xl italic font-normal text-navy dark:text-cream">
           Blog
         </h1>
-        <p className="mx-auto mt-4 max-w-md font-sans text-base text-muted leading-relaxed">
+        <p className="mx-auto mt-3 max-w-md font-sans text-sm text-muted leading-relaxed">
           Deep dives into the conversations and stories behind our interviews.
         </p>
       </header>
 
-      {/* ── Category Filter ───────────────────────────────────── */}
+      {/* ── Category + Month Filter bar ───────────────────────── */}
       <nav className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none">
-            {categories.map((cat) => (
-              <a
-                key={cat}
-                href={cat === 'All' ? '/blog' : `/blog?category=${cat}`}
-                className={[
-                  'shrink-0 rounded-sm px-4 py-1.5 font-sans text-xs font-semibold uppercase tracking-widest transition-colors',
-                  activeCategory === cat
-                    ? 'bg-gold text-navy'
-                    : 'text-muted hover:text-foreground',
-                ].join(' ')}
-              >
-                {cat}
-              </a>
-            ))}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
+            {/* Category tabs */}
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
+              {categories.map((cat) => {
+                const href = cat === 'All'
+                  ? (activeMonth ? `/blog?month=${activeMonth}` : '/blog')
+                  : (activeMonth ? `/blog?category=${cat}&month=${activeMonth}` : `/blog?category=${cat}`)
+                return (
+                  <a
+                    key={cat}
+                    href={href}
+                    className={[
+                      'shrink-0 rounded-sm px-4 py-1.5 font-sans text-xs font-semibold uppercase tracking-widest transition-colors',
+                      activeCategory === cat
+                        ? 'bg-gold text-navy'
+                        : 'text-muted hover:text-foreground',
+                    ].join(' ')}
+                  >
+                    {cat}
+                  </a>
+                )
+              })}
+            </div>
+            {/* Month filter */}
+            <div className="ml-auto shrink-0">
+              <Suspense>
+                <MonthFilter months={availableMonths} activeMonth={activeMonth} />
+              </Suspense>
+            </div>
           </div>
         </div>
       </nav>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* ── Category heading (filtered view) ─────────────────── */}
-        {activeCategory !== 'All' && (
-          <div className="mb-10">
-            <p className="mb-1 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              Category
-            </p>
-            <h2 className="font-serif text-3xl italic text-navy dark:text-cream">
-              {activeCategory}
-            </h2>
-            <p className="mt-1 font-sans text-sm text-muted">
+      {/* ── Main content + sidebar ────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
+        {/* Category / Month heading */}
+        {(activeCategory !== 'All' || activeMonth) && (
+          <div className="mb-8 border-l-4 border-gold pl-4">
+            {activeCategory !== 'All' && (
+              <>
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-gold">Category</p>
+                <h2 className="font-serif text-2xl italic text-navy dark:text-cream">{activeCategory}</h2>
+              </>
+            )}
+            {activeMonth && (
+              <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-gold mt-1">
+                {new Date(activeMonth + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              </p>
+            )}
+            <p className="mt-0.5 font-sans text-xs text-muted">
               {filtered.length} stor{filtered.length !== 1 ? 'ies' : 'y'}
             </p>
           </div>
         )}
 
-        {/* ── Blog Grid ────────────────────────────────────────── */}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2">
-            {filtered.map((blog, i) => (
-              <BlogCard key={blog._id} blog={blog} priority={i < 4} />
-            ))}
-          </div>
-        ) : (
-          <p className="py-24 text-center font-sans text-muted">
-            No blog stories found in this category yet.
-          </p>
-        )}
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
+
+          {/* ── Blog Grid ──────────────────────────────────────── */}
+          <section className="min-w-0 flex-1">
+            {filtered.length > 0 ? (
+              <ShowMoreGrid initialCount={3} label="View More Stories">
+                {(() => {
+                  const rows: BlogCardType[][] = []
+                  for (let i = 0; i < filtered.length; i += 3) rows.push(filtered.slice(i, i + 3))
+                  return rows.map((row, rowIdx) => (
+                    <div key={rowIdx} className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-8 border-b border-border last:border-0">
+                      {row.map((blog, i) => (
+                        <BlogCard key={blog._id} blog={blog} priority={rowIdx === 0 && i < 3} />
+                      ))}
+                    </div>
+                  ))
+                })()}
+              </ShowMoreGrid>
+            ) : (
+              <p className="py-24 text-center font-sans text-muted">
+                No blog stories found in this category yet.
+              </p>
+            )}
+          </section>
+
+          {/* ── Sidebar ──────────────────────────────────────── */}
+          {popular.length > 0 && (
+            <aside className="w-full lg:w-72 xl:w-80 shrink-0">
+              <PopularSidebar items={popular} basePath="blog" />
+            </aside>
+          )}
+
+        </div>
       </div>
     </main>
   )
